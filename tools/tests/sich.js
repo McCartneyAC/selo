@@ -1,0 +1,10 @@
+start(); go('ferry', 22, 15);
+meet('semen'); talk([1]); log('area after Semen with 0 pysanky:', v().area);
+badges(3); meet('semen'); talk([1]); for (let i = 0; i < 40; i++) tick(1); log('area after Semen with 3:', v().area, v().player.tx, v().player.ty);
+meet('ivansirko'); talk([1]); log('lyst after Sirko:', v().S.f.lyst);
+meet('pysar'); talk([0]); log('quiz open:', quizOpen()); quiz(); talk(); log('lyst after letter:', v().S.f.lyst);
+meet('ivansirko'); talk([1]); log('lyst:', v().S.f.lyst, 'tooth:', !!v().S.items.tooth);
+meet('ivansirko'); talk([2]);
+go('kurin', 7, 6); meet('pavlo'); talk();
+go('khortytsia', 11, 1); log('walkable north road:', v().canStand(11, 2, v().player));
+done();
