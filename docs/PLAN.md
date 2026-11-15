@@ -30,7 +30,7 @@ shortcuts work in both keyboard layouts.
 | 15 | Verkhovyna | Hutsulshchyna | music, dance, weddings | a trembita player |
 | 16 | The polonyna | Hutsulshchyna | food and cooking | a vivchar (shepherd) |
 | 17 | Chornohora | Hutsulshchyna | time: days, months, calendar | a molfar |
-| 18 | Lake Synevyr | Zakarpattia | love, friends, feelings | Syn's ghost (the legend of Syn and Vyr) |
+| 18 | Lake Synevyr | Zakarpattia | love, friends, feelings | Vyr's ghost (the legend of Syn and Vyr) |
 | 19 | Kamianets | Podillia | describing things: size, shape, colour, quality | the castle keeper |
 | 20 | The Dniester canyon | Podillia | work, jobs, tools | a raftsman |
 | 21 | Odesa | Black Sea | the sea, ships, talk and jokes | an Odesa fisherwoman |
@@ -67,7 +67,7 @@ talk with dialect, and each dialect word you hear goes into a bonus page of the 
 - The bir (Okhrim the bortnyk): four swarms in four borts, found from clues given in Ukrainian prepositions.
 - The Polissia village (Hafiia the weaver): dress the children's scarecrow with old clothes from the neighbours,
   asked for in Ukrainian; it wakes and chases off Baba Yaga's magpies. Lukash still plays for Mavka.
-- Synevyr (Syn, keeper): carry Vyr's and Syn's words across the lake, then row Vyr over. Ivanka teaches Hutsul words.
+- Synevyr (Vyr, keeper): carry Syn's and Vyr's words across the lake, then row Syn over. Ivanka teaches Hutsul words.
 - Verkhovyna (Did Yura the trembitar): the wedding musicians have forgotten their kolomyiky.
 - The polonyna (Stepan the vatah): Baba Yaga's wind put out the living fire; bring new fire, then cook banush.
 - Chornohora (the molfar): win the stolen days and months back from the old magpie's nest at the Pip Ivan

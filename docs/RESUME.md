@@ -5,7 +5,7 @@ Folders: ~/selo/github is the git repo (the site plus the code that builds it); 
 Every step can be rerun safely and skips work already on disk.
 
 Decisions (revised 2026-11-14): every level, A1 included, is PULS at PULS's own level. Nothing from the earlier Anki deck remains (word choice, glosses, examples, stress, audio); all glosses are hand-written for this game.
-Reaching Baba Yaga needs 75% of a level mastered. New words get Piper TTS audio. Folklore figures are unlocked by mini-quests.
+Reaching Baba Yaga needs all 25 pysanky; each one needs 75% of its place caught plus the keeper's test. The 1–5 levels only schedule review. New words get Piper TTS audio. Folklore figures are unlocked by mini-quests.
 PULS is licensed CC BY-NC-SA 4.0, so the corpus stays in ../local/puls_corpus/ (outside the repo) and PULS is credited.
 
 ## Phase 1: corpus
@@ -17,8 +17,8 @@ PULS is licensed CC BY-NC-SA 4.0, so the corpus stays in ../local/puls_corpus/ (
 ## Phase 2: levels in the game + area mapping + Piper audio
 - [x] 6. TTS masters (slow, a few hours): `for k in 0 1 2 3; do nohup taskset -c $k python3 -X utf8 tools/puls/tts.py $k 4 > ../local/puls_corpus/tts_$k.log 2>&1 & done`
       (resumable: skips existing wavs in ../local/puls_corpus/tts/; check with `tail ../local/puls_corpus/tts_*.log`)
-- [x] 7. Levels in the game: `python3 tools/levels.py` writes data/levels.json (balanced into 25 places) and build.py inlines it.
-      Title screen: arrows (or the on-screen arrow buttons) pick A1–C1. Each level has its own save (A1 keeps the old key). Keeper trial = ceil(75% of the place).
+- [x] 7. Levels in the game: `python3 tools/levels.py` writes data/levels.json (25 places by theme; each holds 0.5–1.6× a 25th of the level) and build.py inlines it.
+      Title screen: arrows (or the on-screen arrow buttons) pick A1–C1. Each level has its own save (vyshneve-save-v3-<LEVEL>). Keeper trial = ceil(75% of the place).
 - [x] 8. After TTS: `python3 tools/clips.py` writes clips-A2..C1.json; `python3 tools/build.py`; publish with files clips-*.json
 ## Phase 3: folklore unlock mini-quests
 - [x] 9. src/folk.js (see ../local/STORY.md, spoilers). Test: tools/tests/folk.js
@@ -37,3 +37,10 @@ PULS is licensed CC BY-NC-SA 4.0, so the corpus stays in ../local/puls_corpus/ (
 
 ## Deck removed (2026-11-14 night)
 - [x] 13. A1 = PULS A1. The 1,062 corpus glosses that had come from the deck were rewritten (gloss chunks 029–032); tools/words.py and tools/themes.py deleted; tools/levels.py builds all five levels (data/words.json is now PULS A1). Saves are version 3, keyed by word (old v2 saves are left alone; only names carry over). Lessons have an A1 list each.
+
+## Review fixes (2026-11-15)
+- [x] 14. Fable's review, sections 1–7: apostrophe typing, prompts without the answer, keeper tests that grow with the place (10/15/20), no double-right options, review only on due words, vocatives, Synevyr in the legend's order (Синь the daughter, Вир the shepherd), story and grammar notes, Ukrainian from the first line at B1+ (earlier at A2), returning players remembered, level tales (src/tales.js).
+- Glosses are American English: `tools/puls/american.py` (spelling rules, plus a hand-made VOCAB table) was applied to the gloss chunks; tools/levels.py tidies short glosses.
+- Places vary in size by theme, 0.5–1.6× the mean (tools/levels.py `balance`, a few PIN words keep the old forest's forest). Sizes per level: ../local/place_sizes.txt.
+- Stress: tools/puls/stress_fix.txt marks the ~620 entries the corpus left unstressed or double-stressed (shown | spoken); tools/levels.py applies it, then `tools/puls/tts.py k 4` ×4 and `tools/clips.py` remake the changed clips. Marked by hand: wants a Ukrainian speaker's spot-check.
+- Tests: `tools/tests/run_all.sh`. A scenario fails on any ERROR, `ok()` failure, or a LOG line that differs from tools/tests/expected/<name>.log (record with PLAY_RECORD=1 after checking a change is right).
