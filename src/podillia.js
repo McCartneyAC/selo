@@ -16,7 +16,7 @@ EXIT_LOCK['fair>kamianets'] = () => {
 EXIT_LOCK['verkhovyna>dniester'] = () => {
   if (badgeCount() >= PODILLIA_NEED) return false;
   turnBack();
-  say('', [L(`The road follows the river down out of the mountains, towards Podillia. A Hutsul raftsman sitting on a log shakes his head: "Down there they speak fast and walk faster. Come back with ${PODILLIA_NEED} pysanky." You have ${badgeCount()}.`,
+  say('', [L(`The road follows the river down out of the mountains, toward Podillia. A Hutsul raftsman sitting on a log shakes his head: "Down there they speak fast and walk faster. Come back with ${PODILLIA_NEED} pysanky." You have ${badgeCount()}.`,
     `Дорога йде вздовж річки вниз, з гір, на Поділля. Гуцул-бокораш, що сидить на колоді, хитає головою: «Там внизу швидко говорять і ще швидше ходять. Вертайся, коли матимеш ${PODILLIA_NEED} писанок». У тебе ${badgeCount()}.`)]);
   return true;
 };
@@ -50,7 +50,7 @@ const COLOUR_WORDS = {
     ['А місто внизу ___, як на долоні.', 'And the town below is small, as if on the palm of your hand.', ['маленьке', 'маленький', 'маленька'], 0, 'Місто is neuter: маленьке.'],
   ]],
   olia: [4, 4, [
-    ['Моя улюблена куля ___ з жовтим.', 'My favourite balloon is red and yellow.', ['червона', 'червоний', 'червоне'], 0, 'Куля is feminine: червона.'],
+    ['Моя улюблена куля ___ з жовтим.', 'My favorite balloon is red and yellow.', ['червона', 'червоний', 'червоне'], 0, 'Куля is feminine: червона.'],
     ['Ось та куля ___, як баклажан.', 'That balloon there is purple, like an aubergine.', ['фіолетова', 'фіолетовий', 'фіолетове'], 0, 'Фіолетова куля.'],
     ['Синя куля ___ за червону.', 'The blue balloon is bigger than the red one.', ['більша', 'велика', 'більший'], 0, 'Bigger: великий → більший (більша for куля). Some comparatives are irregular: малий → менший, добрий → кращий.'],
     ['А зелена — ___ з усіх!', 'And the green one is the smallest of all!', ['найменша', 'менша', 'маленька'], 0, 'The most: най- + the comparative. Менша → найменша.'],
@@ -58,7 +58,7 @@ const COLOUR_WORDS = {
   ]],
 };
 const FLAG = [
-  ['Наш прапор має два ___.', 'Our flag has two colours.', ['кольори', 'кольорів', 'колір'], 0, 'After два, три, чотири: the nominative plural. Два кольори. (П\'ять кольорів.)'],
+  ['Наш прапор має два ___.', 'Our flag has two colors.', ['кольори', 'кольорів', 'колір'], 0, 'After два, три, чотири: the nominative plural. Два кольори. (П\'ять кольорів.)'],
   ['Верх прапора ___, як небо.', 'The top of the flag is blue, like the sky.', ['синій', 'синя', 'синє'], 0, 'Верх is masculine: синій. Some say блакитний, sky blue. Ukrainians argue about it happily.'],
   ['А низ ___, як пшениця.', 'And the bottom is yellow, like wheat.', ['жовтий', 'жовта', 'жовте'], 0, 'Низ is masculine: жовтий. Жовто-блакитний: yellow and blue.'],
   ['Ця смуга синя, а ця — ___.', 'This stripe is blue, and this one is yellow.', ['жовта', 'жовтий', 'жовте'], 0, 'Смуга is feminine: жовта.'],
@@ -68,51 +68,51 @@ function colourHelper(id, intro, after, chat) {
   return (npc, done) => {
     const n = npc.name, [bit, need, qs] = COLOUR_WORDS[id];
     if (farby() & bit) return say(n, after, done);
-    if (!S.f.book || !kamStep()) return say(n, [...chat, ...(S.f.book ? [L('[The whole town is grey. Pan Bohdan, the castle keeper by the bridge, will know why.]', '[Усе місто сіре. Пан Богдан, кастелян біля мосту, знає чому.]')] : [])], done);
+    if (!S.f.book || !kamStep()) return say(n, [...chat, ...(S.f.book ? [L('[The whole town is gray. Pan Bohdan, the castle keeper by the bridge, will know why.]', '[Усе місто сіре. Пан Богдан, кастелян біля мосту, знає чому.]')] : [])], done);
     say(n, intro, null, yesNo(go => {
-      if (!go) return say(n, [L('Then I\'ll stand here in the grey.', 'Тоді я постою тут, у сірому.')], done);
+      if (!go) return say(n, [L('Then I\'ll stand here in the gray.', 'Тоді я постою тут, у сірому.')], done);
       roadQuiz(qs.slice(), 'КОЛІР', q => {
-        if (q.stopped || q.score < need) return say(n, [L(`${q.score} of ${qs.length}. No, it\'s still grey. Let\'s try again.`, `${q.score} з ${qs.length}. Ні, усе ще сіре. Спробуймо ще.`)], done);
+        if (q.stopped || q.score < need) return say(n, [L(`${q.score} of ${qs.length}. No, it\'s still gray. Let\'s try again.`, `${q.score} з ${qs.length}. Ні, усе ще сіре. Спробуймо ще.`)], done);
         S.f.farby = farby() | bit; saveSoon(); sfx('ok');
         say(n, [L('Oh! There! Do you see it?', 'Ой! Ось! Бачиш?'),
-          L(`[A little colour seeps back into Kamianets, like tea into hot water. ${farbyCount()} of 3.]`, `[Трохи кольору вертається в Кам'янець, як чай у гарячу воду. ${farbyCount()} з 3.]`), ...after], done);
-      }, ['КОЛІР', 'Кольори Кам\'янця', 'the colours of Kamianets', 'What is it like?'], 19);
+          L(`[A little color seeps back into Kamianets, like tea into hot water. ${farbyCount()} of 3.]`, `[Трохи кольору вертається в Кам'янець, як чай у гарячу воду. ${farbyCount()} з 3.]`), ...after], done);
+      }, ['КОЛІР', 'Кольори Кам\'янця', 'the colors of Kamianets', 'What is it like?'], 19);
     }));
   };
 }
 function bohdanTalk(npc, done) {
   const n = npc.name, k = kamStep();
-  const test = () => keeperTalk(19, [L('What things are like: big and small, long and short, every colour there is. Великий, малий, червоний, круглий. A castle keeper has to describe his castle to every visitor, a hundred times a day.', 'Які речі бувають: великі й малі, довгі й короткі, усіх кольорів. Великий, малий, червоний, круглий. Кастелян мусить описувати свій замок кожному гостеві, сто разів на день.')])(npc, done);
+  const test = () => keeperTalk(19, [L('What things are like: big and small, long and short, every color there is. Великий, малий, червоний, круглий. A castle keeper has to describe his castle to every visitor, a hundred times a day.', 'Які речі бувають: великі й малі, довгі й короткі, усіх кольорів. Великий, малий, червоний, круглий. Кастелян мусить описувати свій замок кожному гостеві, сто разів на день.')])(npc, done);
   const chat = () => say(n, [L('I\'m the кастелян: the castle keeper. Eleven towers, one bridge, nine hundred years, and a leaking roof on the Papal tower.', 'Я кастелян. Одинадцять веж, один міст, дев\'ятсот років і дірявий дах на Папській вежі.'),
     L('A sultan came here once with an army. He looked up at the walls and asked who had built such a place. "God himself," they told him. "Then let God take it," said the sultan, and went home.', 'Колись сюди прийшов султан із військом. Подивився на мури й спитав, хто збудував таке місце. «Сам Бог», — сказали йому. «Тоді хай Бог його і бере», — сказав султан і пішов додому.')], done);
   const colours = () => {
     if (k === 0) {
       S.f.kam = 1; saveSoon();
-      return say(n, [L('Welcome to Kamianets. Or what\'s left of it. Look around you. What colour is anything?', 'Ласкаво просимо до Кам\'янця. Чи того, що від нього лишилося. Подивися довкола. Якого кольору хоч щось?'),
-        L('Three nights ago a broom flew low over the town, and a flock of magpies behind it. They sat on every roof all night, and at dawn they flew off west. They took the colour words with them. Not the paint. The words.', 'Три ночі тому над містом низько пролетіла мітла, а за нею зграя сорок. Цілу ніч вони сиділи на кожному даху, а на світанку полетіли на захід. І забрали з собою слова про кольори. Не фарбу. Слова.'),
-        L('Nobody in town can name a colour now. And a thing you can\'t name, you stop seeing. So: grey. All of it.', 'Тепер ніхто в місті не може назвати жодного кольору. А що не можеш назвати, того перестаєш бачити. Тому все сіре. Геть усе.'),
-        L('You still have the words, though, don\'t you? Help people find them again. Ruzha sells flowers on the square. Marian is painting the castle from the bridge, in grey. Little Tetianka is at the balloon field, south across the canyon, crying at the balloons.', 'Але в тебе ж слова є, правда? Допоможи людям їх знайти. Ружа продає квіти на площі. Мар\'ян малює замок з мосту, сірим. Маленька Тетянка на полі з повітряними кулями, на південь за каньйоном, плаче над кулями.'),
+      return say(n, [L('Welcome to Kamianets. Or what\'s left of it. Look around you. What color is anything?', 'Ласкаво просимо до Кам\'янця. Чи того, що від нього лишилося. Подивися довкола. Якого кольору хоч щось?'),
+        L('Three nights ago a broom flew low over the town, and a flock of magpies behind it. They sat on every roof all night, and at dawn they flew off west. They took the color words with them. Not the paint. The words.', 'Три ночі тому над містом низько пролетіла мітла, а за нею зграя сорок. Цілу ніч вони сиділи на кожному даху, а на світанку полетіли на захід. І забрали з собою слова про кольори. Не фарбу. Слова.'),
+        L('Nobody in town can name a color now. And a thing you can\'t name, you stop seeing. So: gray. All of it.', 'Тепер ніхто в місті не може назвати жодного кольору. А що не можеш назвати, того перестаєш бачити. Тому все сіре. Геть усе.'),
+        L('You still have the words, though, don\'t you? Help people find them again. Ruzha sells flowers on the square. Marian is painting the castle from the bridge, in gray. Little Tetianka is at the balloon field, south across the canyon, crying at the balloons.', 'Але в тебе ж слова є, правда? Допоможи людям їх знайти. Ружа продає квіти на площі. Мар\'ян малює замок з мосту, сірим. Маленька Тетянка на полі з повітряними кулями, на південь за каньйоном, плаче над кулями.'),
         L('When they can see again, come back to me. We\'ll put the flag up.', 'Коли вони знову бачитимуть, приходь до мене. Піднімемо прапор.'),
-        L('And mind the endings. A colour follows its thing: червоний замок, червона вежа, червоне небо, червоні дахи.', 'І пильнуй закінчення. Колір іде за своєю річчю: червоний замок, червона вежа, червоне небо, червоні дахи.')], done);
+        L('And mind the endings. A color follows its thing: червоний замок, червона вежа, червоне небо, червоні дахи.', 'І пильнуй закінчення. Колір іде за своєю річчю: червоний замок, червона вежа, червоне небо, червоні дахи.')], done);
     }
     if (k === 1 && farbyCount() < 3) return say(n, [L(`${farbyCount()} of 3. Ruzha on the square, Marian by the bridge, Tetianka at the balloons.`, `${farbyCount()} з 3. Ружа на площі, Мар'ян біля мосту, Тетянка біля куль.`)], done);
-    if (k === 1) return say(n, [L('You can see it coming back? Then the flag. It\'s in my pocket, folded up for three days, grey as a dishcloth. Tell me what it\'s like, and I\'ll run it up the tower.', 'Бачиш, як вертається? Тоді прапор. Він три дні складений у мене в кишені, сірий, як ганчірка. Скажи мені, який він, і я підніму його на вежу.')], null, yesNo(go => {
+    if (k === 1) return say(n, [L('You can see it coming back? Then the flag. It\'s in my pocket, folded up for three days, gray as a dishcloth. Tell me what it\'s like, and I\'ll run it up the tower.', 'Бачиш, як вертається? Тоді прапор. Він три дні складений у мене в кишені, сірий, як ганчірка. Скажи мені, який він, і я підніму його на вежу.')], null, yesNo(go => {
       if (!go) return say(n, [L('When you\'re ready. The tower isn\'t going anywhere. It hasn\'t for nine hundred years.', 'Коли будеш {{готовий|готова}}. Вежа нікуди не дінеться. Дев\'ятсот років не ділася.')], done);
       roadQuiz(FLAG.slice(), 'ПРАПОР', q => {
         if (q.stopped || q.score < 4) return say(n, [L(`${q.score} of 5. That\'s somebody else\'s flag. Again.`, `${q.score} з 5. Це чийсь інший прапор. Ще раз.`)], done);
         S.f.kam = 2; saveSoon(); sfx('badge');
         say('', [L('[Pan Bohdan runs up the gatehouse stairs. A moment later the flag climbs the pole, and the wind takes it.]', '[Пан Богдан біжить сходами на надбрамну вежу. За мить прапор повзе вгору по щоглі, і його підхоплює вітер.]'),
-          L('[Blue at the top, like the sky. Yellow underneath, like wheat. And as everybody in Kamianets looks up at it, the colour runs back into the whole town at once: red roofs, green trees, white stone, the river far below as green as a bottle.]', '[Угорі синій, як небо. Унизу жовтий, як пшениця. І поки весь Кам\'янець дивиться на нього, колір вертається в усе місто одразу: червоні дахи, зелені дерева, білий камінь, а далеко внизу річка, зелена, як пляшка.]'),
+          L('[Blue at the top, like the sky. Yellow underneath, like wheat. And as everybody in Kamianets looks up at it, the color runs back into the whole town at once: red roofs, green trees, white stone, the river far below as green as a bottle.]', '[Угорі синій, як небо. Унизу жовтий, як пшениця. І поки весь Кам\'янець дивиться на нього, колір вертається в усе місто одразу: червоні дахи, зелені дерева, білий камінь, а далеко внизу річка, зелена, як пляшка.]'),
           L('[Down on the balloon field, the burners roar. One by one, the balloons go up.]', '[Унизу на полі гудуть пальники. Одна за одною кулі піднімаються в небо.]')], () =>
           say(n, [L('Look at that. Look at it! I\'d forgotten how red my roofs are.', 'Ти подивись. Подивись! Я й забув, які червоні в мене дахи.'),
             L('Take this: the key to the castle. Ключ від замку. Замок, with the stress at the front, is a castle. Замок, with the stress at the back, is a lock. This key does both.', 'Візьми: ключ від замку. За́мок, з наголосом на початку, — це фортеця. Замо́к, з наголосом у кінці, — це те, що замикають. Цей ключ підходить до обох.'), give('kluch'),
-            L('The magpies flew west, towards Lviv. If they\'re stealing whole kinds of words now, she must be getting ready for something.', 'Сороки полетіли на захід, у бік Львова. Якщо вони вже крадуть цілі роди слів, то вона до чогось готується.')], done));
+            L('The magpies flew west, toward Lviv. If they\'re stealing whole kinds of words now, she must be getting ready for something.', 'Сороки полетіли на захід, у бік Львова. Якщо вони вже крадуть цілі роди слів, то вона до чогось готується.')], done));
       }, ['ПРАПОР', 'Прапор над замком', 'the flag over the castle', 'What is the flag like?'], 19);
     }));
-    say(n, [L('The flag\'s up and the town has its colours. Go and look at the balloons; they won\'t stay up forever.', 'Прапор угорі, і місто має свої кольори. Іди подивися на кулі: вони не висітимуть там вічно.')], done);
+    say(n, [L('The flag\'s up and the town has its colors. Go and look at the balloons; they won\'t stay up forever.', 'Прапор угорі, і місто має свої кольори. Іди подивися на кулі: вони не висітимуть там вічно.')], done);
   };
   if (!S.f.book) return chat();
-  say(n, [L('Слава Україні! What can the castle do for you?', 'Слава Україні! Чим замок може тобі допомогти?')], null, menu([L('Your test', 'Ваше випробування'), L('The colours', 'Кольори'), L('Just chatting', 'Просто поговорити')], i => i === 0 ? test() : i === 1 ? colours() : chat()));
+  say(n, [L('Слава Україні! What can the castle do for you?', 'Слава Україні! Чим замок може тобі допомогти?')], null, menu([L('Your test', 'Ваше випробування'), L('The colors', 'Кольори'), L('Just chatting', 'Просто поговорити')], i => i === 0 ? test() : i === 1 ? colours() : chat()));
 }
 function romanTalk(npc, done) {
   const n = npc.name;
@@ -214,7 +214,7 @@ function iovTalk(npc, done) {
     L('On quiet nights you can still hear it ringing under the river. And sometimes the river gives a little of it back. I found this on the shore last spring.', 'Тихими ночами ще й досі чути, як він дзвонить під водою. А іноді річка дещо з нього повертає. Оцей я знайшов на березі минулої весни.'),
     give('dzvinok'),
     L('Whoever hears it remembers something they had forgotten. A name, a song, a word. I think you\'ll need that, where you\'re going.', 'Хто його почує, той згадає щось забуте. Ім\'я, пісню, слово. Думаю, тобі це знадобиться там, куди ти йдеш.'),
-    L('The black wind that went through the village went on west. Towards Lviv, where the wires are.', 'Чорний вітер, що пройшов через село, подався далі на захід. До Львова, де дроти.')], done);
+    L('The black wind that went through the village went on west. Toward Lviv, where the wires are.', 'Чорний вітер, що пройшов через село, подався далі на захід. До Львова, де дроти.')], done);
 }
 
 // ─── The people ───────────────────────────────────────────────────────────
@@ -223,17 +223,17 @@ Object.assign(NPCS, {
   kamianets: [
     { id: 'bohdan', name: 'Pan Bohdan the castle keeper', ua: 11, tx: 8, ty: 15, dir: 'left', pal: Object.assign(P_CITY('#5a6a4a', '#3a3046'), { h: '#d8d4cc', H: '#a9a49b' }), mods: ['moustache', 'hat'], talk: bohdanTalk },
     { id: 'ruzha', name: 'Ruzha the flower seller', ua: 11, tx: 22, ty: 19, dir: 'down', pal: P_PODILLIA('#c8383a', '#3f6fc4'), mods: ['skirt', 'dots'],
-      talk: colourHelper('ruzha', [L('My flowers! I know they\'re beautiful. People still buy them. But nobody can say what they are any more. "A grey one, please. No, the other grey one."', 'Мої квіти! Я знаю, що вони гарні. Люди ще купують. Але ніхто вже не може сказати, які вони. «Дайте сіру. Ні, іншу сіру».'),
+      talk: colourHelper('ruzha', [L('My flowers! I know they\'re beautiful. People still buy them. But nobody can say what they are any more. "A gray one, please. No, the other gray one."', 'Мої квіти! Я знаю, що вони гарні. Люди ще купують. Але ніхто вже не може сказати, які вони. «Дайте сіру. Ні, іншу сіру».'),
         L('You know the words? Then help me, quick, before I sell a funeral bunch for a wedding.', 'Ти знаєш слова? То допоможи, швидко, поки я не продала похоронний букет на весілля.')],
-        [L('Ружа: that\'s my name. An old word for a rose. My mother had a sense of humour. Buy a red one for somebody.', 'Ружа: це моє ім\'я. Старе слово, означає троянда. Мама мала почуття гумору. Купи комусь червону.')],
-        [L('Flowers! Квіти! Grey ones, today. All of them grey. I don\'t know what\'s happened to them.', 'Квіти! Сірі, сьогодні. Усі сірі. Не знаю, що з ними сталося.')]) },
+        [L('Ружа: that\'s my name. An old word for a rose. My mother had a sense of humor. Buy a red one for somebody.', 'Ружа: це моє ім\'я. Старе слово, означає троянда. Мама мала почуття гумору. Купи комусь червону.')],
+        [L('Flowers! Квіти! Gray ones, today. All of them gray. I don\'t know what\'s happened to them.', 'Квіти! Сірі, сьогодні. Усі сірі. Не знаю, що з ними сталося.')]) },
     { id: 'marian', name: 'Marian the painter', ua: 11, tx: 4, ty: 18, dir: 'up', pal: P_CITY('#7a5a8a', '#3a3046'), mods: ['hat', 'glasses'],
       talk: colourHelper('marian', [L('I\'ve painted this castle every summer for thirty years. This morning I squeezed out my paints and... they all look the same. I\'ve forgotten what it\'s LIKE.', 'Я малюю цей замок щоліта тридцять років. Сьогодні зранку видавив фарби і... вони всі однакові. Я забув, ЯКИЙ він.'),
-        L('Describe it for me? Big, small, round, square: the shapes first. If I can say the shapes, I\'ll find the colours.', 'Опиши його мені? Великий, малий, круглий, квадратний: спочатку форми. Якщо я назву форми, то знайду й кольори.')],
+        L('Describe it for me? Big, small, round, square: the shapes first. If I can say the shapes, I\'ll find the colors.', 'Опиши його мені? Великий, малий, круглий, квадратний: спочатку форми. Якщо я назву форми, то знайду й кольори.')],
         [L('Red roofs, white walls, a green river. I can see it all again. This one is going to be my best painting. They always are.', 'Червоні дахи, білі мури, зелена річка. Я знову все бачу. Ця картина буде моя найкраща. Вони завжди такі.')],
-        [L('Художник: a painter. I\'m painting the castle. In grey. It\'s very... modern.', 'Я художник. Малюю замок. Сірим. Дуже... сучасно.')]) },
+        [L('Художник: a painter. I\'m painting the castle. In gray. It\'s very... modern.', 'Я художник. Малюю замок. Сірим. Дуже... сучасно.')]) },
     { id: 'tetianka', name: 'Tetianka', ua: 11, tx: 16, ty: 29, dir: 'down', pal: P_PODILLIA('#e9b949', '#c8383a'), mods: ['skirt', 'vinok'],
-      talk: colourHelper('olia', [L('It\'s the balloon festival! But the pilots won\'t go up. They say they can\'t tell which balloon is whose, because they\'re all grey. That\'s silly. Mine was the best one.', 'Сьогодні фестиваль куль! А пілоти не хочуть летіти. Кажуть, не розберуть, чия куля чия, бо всі сірі. Це дурниця. Моя була найкраща.'),
+      talk: colourHelper('olia', [L('It\'s the balloon festival! But the pilots won\'t go up. They say they can\'t tell which balloon is whose, because they\'re all gray. That\'s silly. Mine was the best one.', 'Сьогодні фестиваль куль! А пілоти не хочуть летіти. Кажуть, не розберуть, чия куля чия, бо всі сірі. Це дурниця. Моя була найкраща.'),
         L('Help me tell them? I can\'t remember any of the words. I just remember it was beautiful.', 'Допоможеш їм пояснити? Я не пам\'ятаю жодного слова. Пам\'ятаю тільки, що було гарно.')],
         [L('They can see them now! When the flag goes up, they\'ll launch. Pan Bohdan promised.', 'Тепер вони їх бачать! Коли піднімуть прапор, полетять. Пан Богдан обіцяв.')],
         [L('Повітряна куля: a hot-air balloon. I want to go in one when I\'m big. Bigger. Bigger than this.', 'Повітряна куля. Я хочу полетіти, коли виросту. Більшою. Більшою, ніж зараз.')]) },
@@ -243,11 +243,11 @@ Object.assign(NPCS, {
         [L('Kamianets means "the stone one". Кам\'яний: made of stone. The town is on a rock, the castle is on a rock, and my wife says my head is made of rock. Everything fits.', 'Кам\'янець — від «камінь». Кам\'яний. Місто на скелі, замок на скелі, а дружина каже, що в мене й голова кам\'яна. Усе сходиться.')]] },
     ...[[8, 29, 0], [21, 29, 1], [33, 29, 2], [38, 30, 3]].map(([tx, ty, k]) => ({ id: 'balloon' + k, kind: 'balloon', tx, ty, look: k, up: () => kamStep() >= 2,
       talk: (n, done) => say('', [kamStep() >= 2 ? L('The balloon hangs high over the canyon on its rope, its burner roaring now and then like a sleepy dragon. Somebody up there waves.', 'Куля висить високо над каньйоном на мотузці, і пальник час від часу гуде, як сонний дракон. Хтось нагорі махає рукою.')
-        : L('A hot-air balloon, laid out on the grass and half filled, grey as a cloud. The pilot is sitting in the basket with his head in his hands.', 'Повітряна куля, розкладена на траві й наполовину надута, сіра, як хмара. Пілот сидить у кошику, обхопивши голову руками.')], done) })),
+        : L('A hot-air balloon, laid out on the grass and half filled, gray as a cloud. The pilot is sitting in the basket with his head in his hands.', 'Повітряна куля, розкладена на траві й наполовину надута, сіра, як хмара. Пілот сидить у кошику, обхопивши голову руками.')], done) })),
   ],
   castle: [{ id: 'lesia', name: 'Lesia the guide', ua: 11, tx: 9, ty: 4, dir: 'down', pal: P_CITY('#c8383a', '#3a3046'), mods: ['skirt'],
     talk: [[L('This is the castle yard. Over there is the Papal tower, where they kept Ustym Karmaliuk, the Robin Hood of Podillia. He took from the rich and gave to the poor, and escaped from prison four times.', 'Це замкове подвір\'я. Он там Папська вежа, де тримали Устима Кармалюка, подільського Робіна Гуда. Він брав у багатих і віддавав бідним і чотири рази тікав із в\'язниці.'),
-      L('The well over there is forty metres deep. If you drop a coin in, you have to come back to Kamianets. Most people drop two, to be sure.', 'Криниця он там сорок метрів завглибшки. Якщо кинеш туди монету, мусиш повернутися до Кам\'янця. Більшість кидає дві, про всяк випадок.')]] }],
+      L('The well over there is forty meters deep. If you drop a coin in, you have to come back to Kamianets. Most people drop two, to be sure.', 'Криниця он там сорок метрів завглибшки. Якщо кинеш туди монету, мусиш повернутися до Кам\'янця. Більшість кидає дві, про всяк випадок.')]] }],
   dniester: [
     { id: 'yakiv', name: 'Did Yakiv the raftsman', ua: 11, tx: 13, ty: 21, dir: 'right', pal: Object.assign(P_PODILLIA('#3f6fc4', '#5a5a4a'), { h: '#d8d4cc', H: '#a9a49b' }), mods: ['hat', 'moustache'], talk: yakivTalk },
     ...mixedUp('oksana', 'Myroslava', [14, 20, 'down'], [20, 15, 'left'], P_CITY('#e8794a', '#3a3046'), ['skirt', 'glasses'],
@@ -283,7 +283,7 @@ NPCS.verkhovyna.push({ id: 'bokorash', name: 'Lesyk the bokorash', ua: 9, tx: 9,
 function podilliaText() {
   const f = S.f, been = id => !!(S.been && S.been[id]), out = [];
   if (badgeCount() >= PODILLIA_NEED && !been('kamianets')) out.push('The fair\'s west road is open now: Podillia.');
-  if (kamStep() === 1) out.push(farbyCount() < 3 ? `Give Kamianets its colour words back: Ruzha on the square, Marian by the castle bridge, Tetianka at the balloon field (${farbyCount()} of 3).` : 'Tell Pan Bohdan at the castle gate that the colours are coming back.');
+  if (kamStep() === 1) out.push(farbyCount() < 3 ? `Give Kamianets its color words back: Ruzha on the square, Marian by the castle bridge, Tetianka at the balloon field (${farbyCount()} of 3).` : 'Tell Pan Bohdan at the castle gate that the colors are coming back.');
   if (dnStep() === 1) out.push(robotaCount() < 5 ? `Tell the people of Bakota who they really are (${robotaCount()} of 5).` : 'Tell Did Yakiv the raftsman his crew is back.');
   if (dnStep() === 2) out.push('Float Did Yakiv\'s raft down the Dniester to the Bakota monastery.');
   return out.length ? ' ' + out.join(' ') : '';

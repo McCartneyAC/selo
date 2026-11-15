@@ -19,7 +19,7 @@ const DIALECT = [
   ['ватра', 'a fire, a campfire', 'On the polonyna the shepherds keep a living fire burning all summer long.'],
   ['кресаня', 'a Hutsul hat', 'Black felt, a narrow brim, and feathers or a band of beads.'],
   ['бриндза', 'sheep\'s cheese', 'Salty and crumbly, kept all winter in a wooden бербениця.'],
-  ['трембіта', 'the trembita', 'A wooden horn three or four metres long. It calls the shepherds, announces weddings and mourns the dead.'],
+  ['трембіта', 'the trembita', 'A wooden horn three or four meters long. It calls the shepherds, announces weddings and mourns the dead.'],
   ['файний', 'fine, beautiful, good', 'Файно: nicely. Hutsuls say it about everything they like.'],
   ['леґінь', 'a young man, a lad', 'An unmarried young man. Standard Ukrainian: хлопець.'],
   ['ади', 'look!', 'Hutsul for дивись!'],
@@ -60,7 +60,7 @@ function renderDial(scroll) {
   });
   if (scroll) { const s = dxList.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' }); }
   const k = D.rows[D.sel], d = DIALECT[k];
-  dxCard.innerHTML = heardDial(d[0]) ? `<div class="nm">${esc(d[0])}</div><div class="en">${esc(d[1])}</div><div class="ex">${esc(d[2])}</div><div class="meta">Гуцульська говірка: Hutsul dialect. A bonus word, not one of the 1,000.</div>`
+  dxCard.innerHTML = heardDial(d[0]) ? `<div class="nm">${esc(d[0])}</div><div class="en">${esc(d[1])}</div><div class="ex">${esc(d[2])}</div><div class="meta">Гуцульська говірка: Hutsul dialect. A bonus word, not one of the ${N} you are catching.</div>`
     : `<div class="nm">???</div><div class="meta">A Hutsul word you haven't heard yet. ${Object.keys(S.d || {}).length} of ${DIALECT.length} heard. Listen to the people of the mountains.</div>`;
 }
 
@@ -116,16 +116,16 @@ EXIT_LOCK['synevyr>verkhovyna'] = () => {
 };
 
 // ─── Syn and Vyr ──────────────────────────────────────────────────────────
-// Vyr, a count's daughter, loved Syn, a shepherd. Her father had a rock dropped on him. She wept, and her tears became the lake.
-// S.f.synvyr: 1 Vyr gave you her message, 2 you said it to Syn, 3 you brought his answer back, 4 they're together.
-const VYR_WORDS = [
+// Syn (Синь), a count's daughter, loved Vyr (Вир), a shepherd. Her father had a rock dropped on him. She wept, and her tears became the lake.
+// S.f.synvyr: 1 Syn gave you her message, 2 you said it to Vyr, 3 you brought his answer back, 4 they're together.
+const HER_WORDS = [
   ['Скажи йому, що я його досі ___.', 'Tell him I still love him.', ['кохаю', 'кохала', 'кохав'], 0, 'Still, now: the present tense. Я кохаю. Кохати: to love, as in love.'],
   ['Без нього я ___ така сумна.', 'Without him I was so sad.', ['була', 'був', 'було'], 0, 'The past tense agrees with who is speaking. A woman: я була. A man: я був.'],
   ['Я так ___, що з моїх сліз стало озеро.', 'I cried so much that my tears became a lake.', ['плакала', 'плакав', 'плакало'], 0, 'A woman says я плакала. Past tense: -в for him, -ла for her, -ло for it, -ли for them.'],
   ['Мені без нього ___.', 'I\'m sad without him.', ['сумно', 'сумна', 'сумний'], 0, 'How you feel: мені + a word in -о. Мені сумно, мені холодно, мені добре.'],
   ['Я хочу бути разом із ___.', 'I want to be together with him.', ['ним', 'він', 'його'], 0, 'З (with) + the instrumental: він → з ним. Ти з нею, ми з ними.'],
 ];
-const SYN_WORDS = [
+const HIS_WORDS = [
   ['Скажи їй, що я її ___ і досі.', 'Tell her I love her still.', ['люблю', 'любив', 'любила'], 0, 'Still, now: the present. Я люблю. (Любити is for people, places and borshch; кохати only for people.)'],
   ['Коли вона була поруч, я ___ щасливий.', 'When she was near, I was happy.', ['був', 'була', 'були'], 0, 'A man says я був. She says я була.'],
   ['Я щодня ___ її усмішку, як сонце.', 'Every day I remembered her smile, like the sun.', ['згадував', 'згадувала', 'згадувало'], 0, 'He: згадував. She would say згадувала.'],
@@ -134,13 +134,13 @@ const SYN_WORDS = [
 ];
 
 const synStep = () => S.f.synvyr || 0;
-function vyrTalk(npc, done) {
+function synTalk(npc, done) {
   const n = npc.name, s = synStep();
   if (!S.f.book) return say(n, [L('[A girl made of mist stands at the water\'s edge, looking at the island.]', '[Біля води стоїть дівчина з туману й дивиться на острів.]')], done);
   if (s === 0) {
     S.f.synvyr = 1; saveSoon();
-    return say(n, [L('You can see me? Then you\'re the first in three hundred years. I am Vyr.', 'Ти мене бачиш? Тоді ти {{перший|перша}} за триста років. Я Вир.'),
-      L('My father was a count, and I loved a shepherd, Syn. My father didn\'t like that. His men dropped a rock on Syn, up on the slope.', 'Мій батько був графом, а я кохала пастуха, Синя. Батькові це не сподобалося. Його люди скинули на Синя камінь, там, на схилі.'),
+    return say(n, [L('You can see me? Then you\'re the first in three hundred years. I am Syn.', 'Ти мене бачиш? Тоді ти {{перший|перша}} за триста років. Я Синь.'),
+      L('My father was a count, and I loved a shepherd, Vyr. My father didn\'t like that. His men dropped a rock on Vyr, up on the slope.', 'Мій батько був графом, а я кохала пастуха, Вира. Батькові це не сподобалося. Його люди скинули на Вира камінь, там, на схилі.'),
       L('I cried until the valley filled. This lake is my tears. He lies under the island, and I can\'t cross my own tears to him.', 'Я плакала, доки долина не наповнилася. Це озеро — мої сльози. Він лежить під островом, а я не можу перейти через свої власні сльози до нього.'),
       L('His raft is by the shore. Row over and tell him my words. In Ukrainian, the way I said them: he never learned anything else.', 'Його пліт біля берега. Попливи і скажи йому мої слова. Українською, як я їх сказала: іншої мови він так і не вивчив.'),
       L('Tell him: I still love him. Without him I was so sad. I cried so much my tears became a lake. I\'m sad without him. I want to be together with him.', 'Скажи йому: я його досі кохаю. Без нього я була така сумна. Я так плакала, що з моїх сліз стало озеро. Мені без нього сумно. Я хочу бути разом із ним.'),
@@ -149,35 +149,35 @@ function vyrTalk(npc, done) {
   if (s === 1) return say(n, [L('Tell him. Please. The raft is south of the island.', 'Скажи йому. Прошу. Пліт на південь від острова.'),
     L('I still love him. Without him I was so sad. I cried so much my tears became a lake. I\'m sad without him. I want to be together with him.', 'Я його досі кохаю. Без нього я була така сумна. Я так плакала, що з моїх сліз стало озеро. Мені без нього сумно. Я хочу бути разом із ним.')], done);
   if (s === 2) return say(n, [L('You\'ve seen him? What did he say? Tell me exactly.', 'Ти його {{бачив|бачила}}? Що він сказав? Скажи точно.')], () =>
-    roadQuiz(SYN_WORDS.slice(), 'СИН', q => {
+    roadQuiz(HIS_WORDS.slice(), 'ВИР', q => {
       if (q.stopped) return done();
-      if (q.score < 4) return say(n, [L(`That doesn't sound like Syn. ${q.score} of 5. Go and ask him again, and listen properly.`, `Це не схоже на Синя. ${q.score} з 5. Попливи й спитай іще раз, і слухай уважно.`)], () => { S.f.synvyr = 1; saveSoon(); done(); });
+      if (q.score < 4) return say(n, [L(`That doesn't sound like Vyr. ${q.score} of 5. Go and ask him again, and listen properly.`, `Це не схоже на Вира. ${q.score} з 5. Попливи й спитай іще раз, і слухай уважно.`)], () => { S.f.synvyr = 1; saveSoon(); done(); });
       S.f.synvyr = 3; saveSoon(); sfx('ok');
       say(n, [L('He still... after three hundred years.', 'Він досі... через триста років.'),
         L('Then take me across. You\'re alive: the water will let you carry me. Go to the raft, and I\'ll be with you.', 'Тоді перевези мене. Ти {{живий|жива}}, і вода дозволить тобі мене перевезти. Іди до плоту, а я буду з тобою.')], done);
-    }, ['СИН', 'Синові слова', 'Syn\'s answer', 'What did Syn say?'], 18));
+    }, ['ВИР', 'Вирові слова', 'Vyr\'s answer', 'What did Vyr say?'], 18));
   if (s === 3) return say(n, [L('To the raft. I\'m right behind you.', 'До плоту. Я за тобою.')], done);
   done();
 }
-function synTalk(npc, done) {
+function vyrTalk(npc, done) {
   const n = npc.name, s = synStep();
   const test = () => keeperTalk(18, [L('Love, friends, feelings. Кохання, друзі, щастя, сум. I had three hundred years to think about every one of them.', 'Кохання, друзі, щастя, сум. Я мав триста років, щоб подумати про кожне з них.')])(npc, done);
-  const chat = () => say(n, [L('I am Syn. I was a shepherd. I had a sopilka, a dog and a girl who was far too good for me.', 'Я Синь. Я був пастухом. Мав сопілку, собаку і дівчину, занадто добру для мене.')], done);
+  const chat = () => say(n, [L('I am Vyr. I was a shepherd. I had a sopilka, a dog and a girl who was far too good for me.', 'Я Вир. Я був пастухом. Мав сопілку, собаку і дівчину, занадто добру для мене.')], done);
   const msg = () => {
     if (s !== 1) return chat();
     say(n, [L('You\'ve come from the shore? From... her? What did she say?', 'Ти з берега? Від... неї? Що вона сказала?')], () =>
-      roadQuiz(VYR_WORDS.slice(), 'ВИР', q => {
+      roadQuiz(HER_WORDS.slice(), 'СИНЬ', q => {
         if (q.stopped) return done();
         if (q.score < 4) return say(n, [L(`${q.score} of 5. That isn't how she talks. Go back and hear her again.`, `${q.score} з 5. Вона так не говорить. Вертайся й послухай її ще раз.`)], done);
         S.f.synvyr = 2; saveSoon(); sfx('ok');
         say(n, [L('[The ghost is quiet for a long time. The water round the island goes very still.]', '[Привид довго мовчить. Вода довкола острова зовсім затихає.]'),
           L('Then tell her this: I love her still. When she was near, I was happy. Every day I remembered her smile, like the sun. With her I always felt good. Let her come, and we\'ll laugh again.', 'Тоді скажи їй: я її люблю і досі. Коли вона була поруч, я був щасливий. Я щодня згадував її усмішку, як сонце. Мені з нею завжди було добре. Хай прийде, і ми знову будемо сміятися.'),
-          L('[Say it as HE said it. He\'s a man, so: я був, я згадував. Vyr would say я була.]', '[Перекажи так, як сказав ВІН. Він чоловік, тож: я був, я згадував. Вир сказала б: я була.]'),
+          L('[Say it as HE said it. He\'s a man, so: я був, я згадував. Syn would say я була.]', '[Перекажи так, як сказав ВІН. Він чоловік, тож: я був, я згадував. Синь сказала б: я була.]'),
           L('[Remember it exactly. She\'ll want to know.]', '[Запам\'ятай точно. Вона захоче знати.]')], done);
-      }, ['ВИР', 'Слова Вир', 'Vyr\'s words', 'What did Vyr say?'], 18));
+      }, ['СИНЬ', 'Слова Сині', 'Syn\'s words', 'What did Syn say?'], 18));
   };
   if (!S.f.book) return chat();
-  const opts = [L('Your test', 'Ваше випробування'), L('Vyr\'s message', 'Слова Вир'), L('Row back', 'Пливти назад')];
+  const opts = [L('Your test', 'Ваше випробування'), L('Syn\'s message', 'Слова Сині'), L('Row back', 'Пливти назад')];
   say(n, [L(s >= 4 ? 'We\'re together. Thank you. What do you need?' : 'A living person, on my island. What do you need?', s >= 4 ? 'Ми разом. Дякую. Чого тобі треба?' : 'Жива людина на моєму острові. Чого тобі треба?')], null,
     menu(opts, i => i === 0 ? test() : i === 1 ? msg() : (done(), rowBack())));
 }
@@ -192,17 +192,17 @@ function islandNote() {
 }
 STORY_LOOK['synevyr:z'] = () => {
   if (onIsland()) { say('', [L('The raft, moored at the island. Row back to the shore?', 'Пліт біля острова. Пливти назад до берега?')], null, yesNo(go => go && rowBack())); return true; }
-  const withVyr = synStep() === 3;
-  say('', [withVyr ? L('Syn\'s raft. Vyr is standing on it already, light as mist. Row to the island?', 'Пліт Синя. Вир уже стоїть на ньому, легка, як туман. Пливти до острова?')
-    : L('A raft of spruce logs, tied to a stake: Syn\'s raft, they say. Row to the island?', 'Пліт зі смерекових колод, прив\'язаний до кілка. Кажуть, це Синів пліт. Пливти до острова?')], null, yesNo(go => {
+  const withSyn = synStep() === 3;
+  say('', [withSyn ? L('Vyr\'s raft. Syn is standing on it already, light as mist. Row to the island?', 'Пліт Вира. Синь уже стоїть на ньому, легка, як туман. Пливти до острова?')
+    : L('A raft of spruce logs, tied to a stake: Vyr\'s raft, they say. Row to the island?', 'Пліт зі смерекових колод, прив\'язаний до кілка. Кажуть, це Вирів пліт. Пливти до острова?')], null, yesNo(go => {
     if (!go) return;
-    rowTo(22, 12, 'up', withVyr ? reunion : islandNote);
+    rowTo(22, 12, 'up', withSyn ? reunion : islandNote);
   }));
   return true;
 };
 STORY_LOOK['synevyr:y'] = () => {
   if (!onIsland()) return false;
-  say('', [L('A grey stone, half sunk in the island. They say it\'s the one the count\'s men rolled down on Syn. Moss has grown over it like a blanket.', 'Сірий камінь, наполовину в землі. Кажуть, це той, що графові люди скотили на Синя. Мох укрив його, як ковдра.')]);
+  say('', [L('A gray stone, half sunk in the island. They say it\'s the one the count\'s men rolled down on Vyr. Moss has grown over it like a blanket.', 'Сірий камінь, наполовину в землі. Кажуть, це той, що графові люди скотили на Вира. Мох укрив його, як ковдра.')]);
   return true;
 };
 STORY_LOOK['synevyr:~'] = () => {
@@ -212,12 +212,12 @@ STORY_LOOK['synevyr:~'] = () => {
 };
 function reunion() {
   S.f.synvyr = 4; saveSoon(); sfx('night');
-  say('', [L('[Vyr steps off the raft onto the island. Syn turns round.]', '[Вир сходить із плоту на острів. Синь обертається.]')], () =>
-    say('Vyr', [L('Синю.', 'Синю.')], () =>
-      say('Syn', [L('Вир. You came.', 'Вир. Ти прийшла.')], () =>
+  say('', [L('[Syn steps off the raft onto the island. Vyr turns round.]', '[Синь сходить із плоту на острів. Вир обертається.]')], () =>
+    say('Syn', [L('Вире.', 'Вире.')], () =>
+      say('Vyr', [L('Синь. You came.', 'Синь. Ти прийшла.')], () =>
         say('', [L('[For a long moment neither of them says anything. Then they both laugh, at exactly the same time, as if three hundred years were a joke only they had heard.]', '[Довгу мить обоє мовчать. А тоді обоє сміються, рівно в одну мить, ніби триста років — це жарт, який чули тільки вони.]'),
           L('[The lake brightens from the middle outwards, blue as an eye.]', '[Озеро світлішає від середини до берегів, синє, як око.]')], () =>
-          say('Vyr', [L('Take this: a drop of the lake. My tears. They\'re not sad any more.', 'Візьми: краплю озера. Мої сльози. Вони вже не сумні.'), give('sloza'),
+          say('Syn', [L('Take this: a drop of the lake. My tears. They\'re not sad any more.', 'Візьми: краплю озера. Мої сльози. Вони вже не сумні.'), give('sloza'),
             L('One more thing. The night the magpies flew over, they were carrying something heavy, east to Chornohora. Words, thousands of them. Somebody\'s filling a nest.', 'І ще одне. Тієї ночі, як летіли сороки, вони несли щось важке, на схід, на Чорногору. Слова, тисячі. Хтось наповнює гніздо.')], done)))));
   function done() {}
 }
@@ -289,7 +289,7 @@ function petroTalk(npc, done) {
 function yuraTalk(npc, done) {
   const n = npc.name;
   const test = () => keeperTalk(15, [L('Music, songs, dances, weddings. Пісня, танець, скрипка, весілля. A Hutsul is born to music, marries to music and is buried to music.', 'Музика, пісні, танці, весілля. Пісня, танець, скрипка, весілля. Гуцул під музику народжується, під музику жениться і під музику його ховають.')])(npc, done);
-  const chat = () => say(n, [L('Трембіта: three metres of spruce struck by lightning. Only that kind sings properly.', 'Трембіта — це три метри смереки, в яку влучила блискавка. Тільки така співає як слід.'),
+  const chat = () => say(n, [L('Трембіта: three meters of spruce struck by lightning. Only that kind sings properly.', 'Трембіта — це три метри смереки, в яку влучила блискавка. Тільки така співає як слід.'),
     L('It calls the shepherds down from the polonyna. It says: a wedding. It says: somebody has died. It doesn\'t say anything twice.', 'Вона кличе вівчарів із полонини. Вона каже: весілля. Вона каже: хтось помер. Двічі вона нічого не каже.'), ...hu('трембіта', 'ґазда')], done);
   if (!S.f.book) return chat();
   say(n, [L('Слава Ісусу! What do you want, леґіню?', 'Слава Ісусу! Чого хочеш, леґіню?')], null, menu([L('Your test', 'Ваше випробування'), L('Just chatting', 'Просто поговорити')], i => i === 0 ? test() : chat()));
@@ -305,7 +305,7 @@ const SUPPER = [
   ['Додай трохи ___, але не багато.', 'Add a little salt, but not much.', ['солі', 'сіль', 'сіллю'], 0, 'Трохи (a little) and багато (a lot) take the genitive: сіль → солі.'],
   ['Накрий казан ___, щоб не вистиг.', 'Cover the pot with a lid so it doesn\'t go cold.', ['кришкою', 'кришка', 'кришку'], 0, 'With what? Кришка → кришкою.'],
   ['Ватаг вечеряє з ___.', 'The vatah has supper with the shepherds.', ['вівчарями', 'вівчарі', 'вівчарів'], 0, 'З (together with) + the instrumental plural: вівчарі → з вівчарями.'],
-  ['Ох і смачна ___! Як у мами!', 'What a delicious dish! Like mum\'s!', ['страва', 'страву', 'стравою'], 0, 'Just naming it: the nominative, the dictionary form. Смачна страва. Смачного!: enjoy your meal!'],
+  ['Ох і смачна ___! Як у мами!', 'What a delicious dish! Like mom\'s!', ['страва', 'страву', 'стравою'], 0, 'Just naming it: the nominative, the dictionary form. Смачна страва. Смачного!: enjoy your meal!'],
 ];
 const vatraStep = () => S.f.vatra || 0;
 function stepanTalk(npc, done) {
@@ -343,7 +343,7 @@ function ashesTalk(npc, done) {
     return say('', [L('You tip the molfar\'s pot into the ashes. For a moment nothing. Then a small red tongue, then a big yellow one, and the ватра is burning again.', 'Ти висипаєш мольфарів горщик у попіл. Мить — нічого. Тоді маленький червоний язичок, тоді великий жовтий, і ватра знову горить.'),
       L('All across the polonyna the sheep lift their heads and start, at last, to eat.', 'По всій полонині вівці підводять голови і нарешті починають їсти.')], done);
   }
-  say('', [L('Grey ash in a ring of stones, cold as a cellar. A thread of smoke still comes out of it, as if it hasn\'t quite given up.', 'Сірий попіл у колі з каміння, холодний, як льох. З нього ще тягнеться цівка диму, ніби він не зовсім здався.')], done);
+  say('', [L('Gray ash in a ring of stones, cold as a cellar. A thread of smoke still comes out of it, as if it hasn\'t quite given up.', 'Сірий попіл у колі з каміння, холодний, як льох. З нього ще тягнеться цівка диму, ніби він не зовсім здався.')], done);
 }
 
 // ─── Chornohora: the magpies' nest, and the days they stole ───────────────
@@ -404,7 +404,7 @@ function queenTalk(npc, done) {
       say(n, [L(`${q.score} of 10?! Thief! Cheat! Ugh. Take them.`, `${q.score} з 10?! Злодій! Шахрай! Тьху. Забирай.`),
         L('[The nest bursts open. Days, months and hours fly out like sparrows, and away over the ridge in every direction. A notched stick falls at your feet.]', '[Гніздо розлітається. Дні, місяці й години пурхають, як горобці, і летять через хребет на всі боки. До твоїх ніг падає палиця з зарубками.]'),
         L('She\'ll hear about this. She\'s not going to send magpies any more. She\'s going to come herself. To the old forest. To your village. Кра!', 'Вона про це дізнається. Більше вона сорок не посилатиме. Прийде сама. До старого лісу. До твого села. Кра!'),
-        L('[The old magpie flaps off east, towards home, very fast.]', '[Стара сорока летить на схід, у бік дому, дуже швидко.]')], done);
+        L('[The old magpie flaps off east, toward home, very fast.]', '[Стара сорока летить на схід, у бік дому, дуже швидко.]')], done);
     }, ['ГНІЗДО', 'Сорочине гніздо', 'the magpies\' nest', 'Where does this day go?'], 17);
   }));
 }
@@ -414,9 +414,9 @@ const P_HUTSUL = (shirt, trousers) => ({ h: '#2b2230', H: '#1a141e', w: '#f4efe2
 const P_GHOST = { h: '#cfe8ea', H: '#a8d0d4', w: '#e8f4f4', W: '#cfe4e6', r: '#a8d0d4', x: '#8abcc2', p: '#e8f4f4', P: '#cfe4e6', b: '#a8d0d4', s: '#f0fafa', S: '#d8ecee', m: '#f0fafa' };
 Object.assign(NPCS, {
   synevyr: [
-    { id: 'vyr', name: 'Vyr', ua: 9, tx: 10, ty: 12, dir: 'right', ghost: true, glow: true, when: () => synStep() < 4, pal: Object.assign({}, P_GHOST, { h: '#e9d89a', H: '#c9b878' }), mods: ['skirt'], talk: vyrTalk },
-    { id: 'syn', name: 'Syn', ua: 9, tx: 22, ty: 11, dir: 'down', ghost: true, glow: true, pal: P_GHOST, mods: ['hat'], talk: synTalk },
-    { id: 'vyr2', name: 'Vyr', ua: 9, tx: 21, ty: 11, dir: 'right', ghost: true, glow: true, when: () => synStep() >= 4, pal: Object.assign({}, P_GHOST, { h: '#e9d89a', H: '#c9b878' }), mods: ['skirt'],
+    { id: 'syn', name: 'Syn', ua: 9, tx: 10, ty: 12, dir: 'right', ghost: true, glow: true, when: () => synStep() < 4, pal: Object.assign({}, P_GHOST, { h: '#e9d89a', H: '#c9b878' }), mods: ['skirt'], talk: synTalk },
+    { id: 'vyr', name: 'Vyr', ua: 9, tx: 22, ty: 11, dir: 'down', ghost: true, glow: true, pal: P_GHOST, mods: ['hat'], talk: vyrTalk },
+    { id: 'syn2', name: 'Syn', ua: 9, tx: 21, ty: 11, dir: 'right', ghost: true, glow: true, when: () => synStep() >= 4, pal: Object.assign({}, P_GHOST, { h: '#e9d89a', H: '#c9b878' }), mods: ['skirt'],
       talk: [[L('Three hundred years I cried. Now I can\'t stop laughing. He\'s terrible at jokes.', 'Триста років я плакала. А тепер не можу перестати сміятися. Він жахливо розповідає анекдоти.')]] },
     { id: 'ivanka', name: 'Ivanka', ua: 9, tx: 8, ty: 28, dir: 'up', pal: P_HUTSUL('#e8794a', '#c8383a'), mods: ['skirt', 'dots'], talk: ivankaTalk },
     { id: 'mytro', name: 'Mytro the ґазда', ua: 18, tx: 40, ty: 13, dir: 'down', pal: P_HUTSUL('#c8383a', '#c8383a'), mods: ['hat', 'moustache'], talk: mytroTalk },
@@ -424,7 +424,7 @@ Object.assign(NPCS, {
   ],
   babahouse: [{ id: 'palahna', name: 'Baba Palahna', ua: 9, tx: 4, ty: 4, dir: 'down', pal: Object.assign({}, P_HUTSUL('#e8794a', '#2b2230'), { h: '#e8e4da', H: '#bdb6a8' }), mods: ['skirt', 'dots'],
     talk: (npc, done) => say(npc.name, [L('Сідай, дитино. I\'m the ґаздиня here. Ivanka is my granddaughter; she\'s teaching you to talk like us? Good. Somebody has to.', 'Сідай, дитино. Я тут ґаздиня. Іванка — моя внучка; вчить тебе говорити по-нашому? Добре. Хтось мусить.'),
-      L('My grandmother used to say the lake was Vyr\'s tears. My mother said so too. I say: drink it, it\'s very good water.', 'Моя баба казала, що озеро — це сльози Вир. Мама теж так казала. А я кажу: пий, дуже добра вода.'), ...hu('ґаздиня')], done) }],
+      L('My grandmother used to say the lake was Syn\'s tears. My mother said so too. I say: drink it, it\'s very good water.', 'Моя баба казала, що озеро — це сльози Сині. Мама теж так казала. А я кажу: пий, дуже добра вода.'), ...hu('ґаздиня')], done) }],
   verkhovyna: [
     { id: 'yura', name: 'Did Yura the trembitar', ua: 9, tx: 10, ty: 13, dir: 'down', pal: Object.assign({}, P_HUTSUL('#c8383a', '#c8383a'), { h: '#d8d4cc', H: '#a9a49b' }), mods: ['hat', 'moustache'], talk: yuraTalk },
     { id: 'petro', name: 'Petro the groom', ua: 9, tx: 18, ty: 28, dir: 'down', pal: P_HUTSUL('#c8383a', '#3a3046'), mods: ['hat'], talk: petroTalk },
@@ -482,9 +482,9 @@ Object.assign(NPCS, {
 function mountainText() {
   const f = S.f, been = id => !!(S.been && S.been[id]), out = [];
   if (badgeCount() >= CARPATHIANS_NEED && !been('synevyr')) out.push('Svitlana\'s night train leaves the Polissia halt for the mountains now.');
-  if (synStep() === 1) out.push('Row out to the island on Lake Synevyr and tell Syn what Vyr said.');
-  if (synStep() === 2) out.push('Bring Syn\'s answer back to Vyr, on the shore of Synevyr.');
-  if (synStep() === 3) out.push('Take Vyr across to the island on Syn\'s raft.');
+  if (synStep() === 1) out.push('Row out to the island on Lake Synevyr and tell Vyr what Syn said.');
+  if (synStep() === 2) out.push('Bring Vyr\'s answer back to Syn, on the shore of Synevyr.');
+  if (synStep() === 3) out.push('Take Syn across to the island on Vyr\'s raft.');
   if (f.hutsul === 1) out.push('Answer Mytro the ґазда at the pass east of Synevyr, in Hutsul.');
   if (f.ves === 1) out.push(`Help Verkhovyna's wedding musicians remember their songs (${[1, 2, 4].filter(b => muzBits() & b).length} of 3), then tell Petro.`);
   if (vatraStep() === 1) out.push(has('zhyvavatra') ? 'Put the living fire in the polonyna\'s cold ashes.' : 'Ask the molfar on Chornohora for living fire, for Stepan\'s polonyna.');

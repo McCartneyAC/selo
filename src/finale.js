@@ -41,11 +41,11 @@ const FINAL_SOURCES = [
   ['УЗВІЗ', 'Майбутній час', 'Pani Motrona\'s wax', () => WAX],
   ['ПОЛІССЯ', 'Знахідний відмінок', 'the scarecrow', () => CLOTHES.map(c => c[2])],
   ['БІР', 'Прийменники', 'Okhrim\'s swarms', () => SWARM_WHERE],
-  ['СИНЕВИР', 'Рід у минулому часі', 'Syn and Vyr', () => VYR_WORDS.concat(SYN_WORDS)],
+  ['СИНЕВИР', 'Рід у минулому часі', 'Syn and Vyr', () => HER_WORDS.concat(HIS_WORDS)],
   ['ПЕРЕВАЛ', 'Гуцульська говірка', 'Mytro the ґазда', () => HUTSUL_TEST],
   ['ПОЛОНИНА', 'Орудний відмінок', 'the shepherds\' supper', () => SUPPER],
   ['ЧОРНОГОРА', 'Дати й час', 'the magpie\'s nest', () => DAYS],
-  ['КАМ\'ЯНЕЦЬ', 'Узгодження прикметників', 'the colours', () => Object.values(COLOUR_WORDS).flatMap(c => c[2]).concat(FLAG)],
+  ['КАМ\'ЯНЕЦЬ', 'Узгодження прикметників', 'the colors', () => Object.values(COLOUR_WORDS).flatMap(c => c[2]).concat(FLAG)],
   ['ДНІСТЕР', 'Працювати ким', 'the people of Bakota', () => Object.values(JOBS).flatMap(j => j[1])],
   ['ЛИМАН', 'Числівники', 'counting the salt', () => SALT_COUNT],
   ['ОДЕСА', 'Слова-зв\'язки', 'the jokes of Humorina', () => Object.values(JOKES).flatMap(j => j[2])],
@@ -74,7 +74,7 @@ const finalNeed = () => Math.max(14, 19 - helpers().length);
 
 // ─── Her tale ─────────────────────────────────────────────────────────────
 const KAZKA = [
-  ['Жила-___ собі Баба Яга.', 'Once upon a time there lived Baba Yaga.', ['була', 'був', 'були'], 0, 'Жила-була: how Ukrainian tales begin. The past tense, feminine.'],
+  ['Жила ___ Баба Яга.', 'Once upon a time there lived Baba Yaga.', ['собі', 'себе', 'сама'], 0, 'Жила собі…, був собі…: that собі is how Ukrainian tales begin. It means nothing on its own; it just tells you a tale is coming.'],
   ['Жила вона в старому ___.', 'She lived in the old forest.', ['лісі', 'ліс', 'лісом'], 0, 'Де? У + the locative: ліс → у лісі.'],
   ['Її хатка стояла на курячих ___.', 'Her hut stood on hen\'s legs.', ['ніжках', 'ніжки', 'ніжками'], 0, 'На + the locative plural: ніжки → на ніжках.'],
   ['Літала вона в ступі, а слід замітала ___.', 'She flew in a mortar and swept away her tracks with a broom.', ['мітлою', 'мітла', 'мітлу'], 0, 'With what? The instrumental: мітла → мітлою.'],
@@ -119,7 +119,7 @@ function finaleTalk(npc, done) {
   ], next);
   const inside = next => S.f.finTry ? scenes([nx => { playMusic('carol'); nx(); }, scene(Y, [L(`Back again? The stove is warm. Same rules: twenty-one words, ${finalNeed()} right.`, `Знову ти? Піч тепла. Ті самі правила: двадцять одне слово, ${finalNeed()} правильних.`)])], next) : scenes([
     nx => { playMusic('carol'); S.f.finTry = 1; nx(); },
-    scene('', [L('[Inside it is hot as a bathhouse. The great pich takes up half the hut, and in its mouth, thousands of words are burning: names, songs, days of the week, the colours of Kamianets.]', '[Усередині гаряче, як у лазні. Велика піч займає пів хати, і в її челюстях горять тисячі слів: імена, пісні, дні тижня, кольори Кам\'янця.]'),
+    scene('', [L('[Inside it is hot as a bathhouse. The great pich takes up half the hut, and in its mouth, thousands of words are burning: names, songs, days of the week, the colors of Kamianets.]', '[Усередині гаряче, як у лазні. Велика піч займає пів хати, і в її челюстях горять тисячі слів: імена, пісні, дні тижня, кольори Кам\'янця.]'),
       L('[Baba Yaga lifts her broom, and sweeps it once across the floor.]', '[Баба Яга піднімає мітлу і раз мете нею по підлозі.]'),
       L('[Silence falls over the whole forest. You open your mouth, and nothing comes out.]', '[Над усім лісом западає тиша. Ти відкриваєш рота, і не можеш нічого сказати.]')]),
     ...(helpers().length ? [scene('', [L('[And then, outside, somebody starts to talk. Then somebody else. They came, the way they promised, and they are speaking out loud:]', '[А тоді надворі хтось починає говорити. Потім ще хтось. Вони прийшли, як обіцяли, і говорять уголос:]'),
@@ -129,9 +129,9 @@ function finaleTalk(npc, done) {
       L(`Twenty-one of them. Get ${finalNeed()} right${helpers().length ? ' (your noisy friends are helping, I can hear them)' : ''}, and they go free. Fewer, and they go back on the fire.`, `Двадцять одне. ${finalNeed()} правильних${helpers().length ? ' (твої галасливі друзі допомагають, я їх чую)' : ''}, і вони вільні. Менше — і назад у вогонь.`)]),
   ], next);
   const roadRound = next => roadQuiz(finalItems(), 'УСЯ ДОРОГА', q => {
-    if (q.stopped || q.score < finalNeed()) return say(Y, [L(`${q.score} of 21. Not enough! Back in the stove they go. Go home, practise on the road, and come back. I\'ll keep the fire going.`, `${q.score} з 21. Замало! Назад у піч. Іди, повправляйся в дорозі, і вертайся. Я підтримуватиму вогонь.`)], done);
+    if (q.stopped || q.score < finalNeed()) return say(Y, [L(`${q.score} of 21. Not enough! Back in the stove they go. Go home, practice on the road, and come back. I\'ll keep the fire going.`, `${q.score} з 21. Замало! Назад у піч. Іди, повправляйся в дорозі, і вертайся. Я підтримуватиму вогонь.`)], done);
     S.f.fin = 2; saveSoon(); sfx('badge');
-    say('', [L(`[${q.score} of 21. With every answer a word leaps out of the stove and flies up the chimney: a case from the Sich, a verb from the Chumak's Road, a colour from Kamianets, a number from the salt liman.]`, `[${q.score} з 21. З кожною відповіддю слово вистрибує з печі й летить у комин: відмінок із Січі, дієслово з Чумацького Шляху, колір із Кам\'янця, число з лиману.]`)], () =>
+    say('', [L(`[${q.score} of 21. With every answer a word leaps out of the stove and flies up the chimney: a case from the Sich, a verb from the Chumak's Road, a color from Kamianets, a number from the salt liman.]`, `[${q.score} з 21. З кожною відповіддю слово вистрибує з печі й летить у комин: відмінок із Січі, дієслово з Чумацького Шляху, колір із Кам\'янця, число з лиману.]`)], () =>
       say(Y, [L('That\'s the grammar. Clever child. Now the words themselves. Fifteen. Get thirteen.', 'Це граматика. Розумне дитя. А тепер самі слова. П\'ятнадцять. Тринадцять правильних.')], next));
   }, ['УСЯ ДОРОГА', 'Від Вишневого до Львова', 'the whole road', 'Which form fits?']);
   const wordRound = next => startTrial(null, 15, q => {
@@ -141,9 +141,9 @@ function finaleTalk(npc, done) {
   const twist = next => scenes([
     scene('', [L('[The last words burst out of the stove and up the chimney, and the fire sinks to a little red glow.]', '[Останні слова вириваються з печі й летять у комин, і вогонь опадає до маленької червоної жаринки.]'),
       L('[Baba Yaga sits down on the bench by the cold stove. Suddenly she looks very small, and very old, and not frightening at all.]', '[Баба Яга сідає на лаву біля холодної печі. Раптом вона здається дуже маленькою, дуже старою і зовсім не страшною.]')]),
-    scene(Y, [L('Well. That\'s that, then. You know what was really in that stove, little dove? Me.', 'Ну. От і все. А знаєш, що насправді було в тій печі, голубчику? Я.'),
+    scene(Y, [L('Well. That\'s that, then. You know what was really in that stove, little dove? Me.', 'Ну. От і все. А знаєш, що насправді було в тій печі, {{голубчику|голубонько}}? Я.'),
       L('Once every child in this land knew my name. They screamed it in the dark under the covers, and loved it. Every grandmother told my tale on winter nights. I was the most frightening thing in Ukraine, and I was so proud.', 'Колись кожна дитина в цьому краю знала моє ім\'я. Кричала його в темряві під ковдрою, і любила. Кожна бабуся розповідала про мене казку зимовими вечорами. Я була найстрашніша в Україні, і так цим пишалася.'),
-      L('Then nobody told it any more. I got quieter, and quieter, and the one who sits in the rock started looking at me like a neighbour. So I took your words to keep warm. If I was going to be forgotten, I wasn\'t going alone.', 'А потім її перестали розповідати. Я тихла й тихла, а той, що в скалі сидить, почав дивитися на мене, як на сусідку. Тож я забирала ваші слова, щоб гріли. Якщо вже мене забудуть, то не саму.')]),
+      L('Then nobody told it any more. I got quieter, and quieter, and the one who sits in the rock started looking at me like a neighbor. So I took your words to keep warm. If I was going to be forgotten, I wasn\'t going alone.', 'А потім її перестали розповідати. Я тихла й тихла, а той, що в скалі сидить, почав дивитися на мене, як на сусідку. Тож я забирала ваші слова, щоб гріли. Якщо вже мене забудуть, то не саму.')]),
     scene('', [L('[You remember what the one in the rock said: eating words never works. Only being told works.]', '[Ти згадуєш, що казав той, що в скалі: їсти слова ніколи не допомагає. Допомагає тільки, коли про тебе розповідають.]'),
       L('[So you sit down beside her, and you tell her her own tale. Properly. In Ukrainian.]', '[Тож ти сідаєш поруч і розповідаєш їй її ж казку. Як слід. Українською.]')]),
     nx => tellTale(false, nx, done),
@@ -179,8 +179,8 @@ function homecoming(done) {
     ...(f.lukash === 2 ? [L('[By the lake in Polissia, Lukash plays the same tune as always. This time, Mavka is sitting beside him.]', '[Біля поліського озера Лукаш грає ту саму мелодію, що й завжди. Цього разу поруч сидить Мавка.]')] : []),
     L('[In the mountains a trembita sounds over every ridge, and on Lake Synevyr two ghosts are laughing at a joke only they know.]', '[У горах трембіта лунає над усіма хребтами, а на Синевирі двоє привидів сміються з жарту, який знають тільки вони.]'),
     L('[The balloons rise over Kamianets. In Odesa somebody finishes a joke. In Lviv, every telephone rings at once, and every one of them says «алло».]', '[Над Кам\'янцем піднімаються кулі. В Одесі хтось закінчує жарт. У Львові всі телефони дзвонять одночасно, і кожен каже «алло».]'),
-    (dzvin() & 16) ? L('[And at dawn, a pair of headlights comes up the road into Vyshneve: a lorry, mud to the windows, and tato at the wheel, who drove all night, as he promised.]', '[А на світанку дорогою до Вишневого піднімаються фари: вантажівка, заляпана болотом аж до вікон, і тато за кермом, що їхав усю ніч, як обіцяв.]')
-      : L('[And at dawn, a lorry comes up the road into Vyshneve, mud to the windows. Tato, home at last. In his pocket, a postcard from Odesa, and on the back, for the first time since spring, his big square handwriting.]', '[А на світанку дорогою до Вишневого їде вантажівка, заляпана болотом аж до вікон. Тато, нарешті вдома. У кишені листівка з Одеси, а на звороті вперше з весни його великий квадратний почерк.]'),
+    (dzvin() & 16) ? L('[And at dawn, a pair of headlights comes up the road into Vyshneve: a truck, mud to the windows, and tato at the wheel, who drove all night, as he promised.]', '[А на світанку дорогою до Вишневого піднімаються фари: вантажівка, заляпана болотом аж до вікон, і тато за кермом, що їхав усю ніч, як обіцяв.]')
+      : L('[And at dawn, a truck comes up the road into Vyshneve, mud to the windows. Tato, home at last. In his pocket, a postcard from Odesa, and on the back, for the first time since spring, his big square handwriting.]', '[А на світанку дорогою до Вишневого їде вантажівка, заляпана болотом аж до вікон. Тато, нарешті вдома. У кишені листівка з Одеси, а на звороті вперше з весни його великий квадратний почерк.]'),
   ];
   say('', montage, () => {
     sfx('door');
@@ -208,17 +208,17 @@ function dumaLines() {
     [(f.panas || 0) >= 5, 'It carried a father\'s letter to his son, right across Kyiv.', 'Батьків лист синові через увесь Київ донесло.'],
     [(f.litopys || 0) >= 3, 'In the dark caves it found the chronicle\'s lost pages, and Nestor gave it his own quill.', 'У темних печерах загублені сторінки літопису знайшло, і Нестор йому своє перо віддав.'],
     [(f.opud || 0) >= 2, 'In Polissia it dressed a scarecrow, and the magpies fled the flax.', 'На Поліссі опудало вбрало, і сороки з льону полетіли.'],
-    [(f.synvyr || 0) >= 4, 'It brought Syn and Vyr together across a lake of tears.', 'Синя й Вир через озеро сліз докупи звело.'],
+    [(f.synvyr || 0) >= 4, 'It brought Syn and Vyr together across a lake of tears.', 'Синь і Вира через озеро сліз докупи звело.'],
     [(f.ves || 0) >= 2, 'It gave a Hutsul wedding back its music, and the trembita sounded over every mountain.', 'Гуцульському весіллю музику повернуло, і трембіта заграла на всі гори.'],
     [(f.soroka || 0) >= 2, 'It won the days and months back from the old magpie on Pip Ivan.', 'У старої сороки на Піп Івані дні й місяці виграло.'],
-    [(f.kam || 0) >= 2, 'It gave Kamianets back its colours, and the flag went up over the castle.', 'Кам\'янцю кольори повернуло, і прапор над замком піднявся.'],
+    [(f.kam || 0) >= 2, 'It gave Kamianets back its colors, and the flag went up over the castle.', 'Кам\'янцю кольори повернуло, і прапор над замком піднявся.'],
     [(f.dnister || 0) >= 2, 'On the Dniester it gave people back their work.', 'На Дністрі людям їхню роботу повернуло.'],
     [(f.sil || 0) >= 2, 'It counted the chumaks\' salt, all the way to a billion and back.', 'Чумакам сіль порахувало, аж до мільярда і назад.'],
     [(f.odesa || 0) >= 2, 'In Odesa it found the jokes their endings, and half the city roared.', 'В Одесі жартам кінці знайшло, і пів міста реготало.'],
     [(f.posh || 0) >= 2, 'In Vylkove it delivered every parcel, each to whom it belonged.', 'У Вилковому всі посилки рознесло, кожну — кому треба.'],
     [(f.lviv || 0) >= 2, 'In Lviv it rang its friends from under the ground.', 'У Львові з-під землі друзям подзвонило.'],
-    [(f.rushnyk || 0) >= 2, 'From the mountains to the sea it helped the neighbours, and Baba Paraska wove it a road rushnyk.', 'Від гір до моря сусідам допомагало, і баба Параска рушник-дорогу йому виткала.'],
-    [true, 'And then it came into the old forest, to the hut on hen\'s legs, and beat the old woman not with a sabre, but with words:', 'А тоді прийшло воно в старий ліс, до хатки на курячих ніжках, і не шаблею, а словом стару перемогло:'],
+    [(f.rushnyk || 0) >= 2, 'From the mountains to the sea it helped the neighbors, and Baba Paraska wove it a road rushnyk.', 'Від гір до моря сусідам допомагало, і баба Параска рушник-дорогу йому виткала.'],
+    [true, 'And then it came into the old forest, to the hut on hen\'s legs, and beat the old woman not with a saber, but with words:', 'А тоді прийшло воно в старий ліс, до хатки на курячих ніжках, і не шаблею, а словом стару перемогло:'],
     [true, 'it told Baba Yaga her very own tale, and the words flew out of the stove, home, to the quiet houses.', 'розповіло Бабі Язі її ж таки казку, і слова з печі полетіли додому, по тихих хатах.'],
     [true, `So glory to you, ${n}, for many years! Say your words every day, good people, out loud: for while a word is spoken, nobody can sweep it away.`, `Тож слава тобі, ${v}, на многая літа! Кажіть свої слова щодня, люди добрі, уголос, — бо поки слово сказане, його ніхто не вимете.`],
   ];
@@ -248,7 +248,7 @@ function summary(done) {
   const all = c >= N && !has('bandura');
   say('', [L(`[You caught ${c} of ${N} words, and mastered ${m}. You hold all ${NZ} pysanky, and the golden one.]`, `[Ти {{зловив|зловила}} ${c} з ${N} слів, і ${m} {{вивчив|вивчила}} назавжди. У тебе всі ${NZ} писанок, і ще золота.]`),
     L(`[On the road you learned ${t.length} of ${TOPICS.length} pieces of Ukrainian grammar: ${t.map(x => x[1]).join(' · ')}.]`, `[У дорозі ти {{вивчив|вивчила}} ${t.length} з ${TOPICS.length} тем української граматики: ${t.map(x => x[0]).join(' · ')}.]`),
-    L(`[You heard ${Object.keys(S.d || {}).length} of ${DIALECT.length} Hutsul words, and read ${Object.keys(S.cs || {}).length} of ${CSL.length} words of Church Slavonic. You helped ${ERRANDS.filter(x => errandState(x.id) === 2).length} of ${ERRANDS.length} neighbours.]`, `[Ти {{почув|почула}} ${Object.keys(S.d || {}).length} з ${DIALECT.length} гуцульських слів і {{прочитав|прочитала}} ${Object.keys(S.cs || {}).length} з ${CSL.length} церковнослов\'янських. Ти {{допоміг|допомогла}} ${ERRANDS.filter(x => errandState(x.id) === 2).length} з ${ERRANDS.length} сусідів.]`),
+    L(`[You heard ${Object.keys(S.d || {}).length} of ${DIALECT.length} Hutsul words, and read ${Object.keys(S.cs || {}).length} of ${CSL.length} words of Church Slavonic. You helped ${ERRANDS.filter(x => errandState(x.id) === 2).length} of ${ERRANDS.length} neighbors.]`, `[Ти {{почув|почула}} ${Object.keys(S.d || {}).length} з ${DIALECT.length} гуцульських слів і {{прочитав|прочитала}} ${Object.keys(S.cs || {}).length} з ${CSL.length} церковнослов\'янських. Ти {{допоміг|допомогла}} ${ERRANDS.filter(x => errandState(x.id) === 2).length} з ${ERRANDS.length} сусідів.]`),
     ...(all ? [L(`[Ostap puts his bandura into your hands. "All ${N}. You're a {{кобзар|кобзарка}} now. Play like a goose with a cold, if you like. It's yours."]`, `[Остап кладе тобі в руки свою бандуру. «Усі ${N}. Тепер ти {{кобзар|кобзарка}}. Грай, як гусак із нежитем, якщо хочеш. Вона твоя.»]`), give('bandura')]
       : [L(`[There are still ${N - c} words out there in the grass. Ostap says he'll give his bandura to whoever catches every last one.]`, `[У траві ще ${N - c} ${sliv(N - c)}. Остап каже, що віддасть свою бандуру тому, хто зловить усі до одного.]`)]),
     L('ВИШНЕВЕ · Designed by Andrew, built with Claude, in October 2026.', 'ВИШНЕВЕ · Задумав Андрій, збудував Claude, у жовтні 2026 року.'),
@@ -274,7 +274,7 @@ findNpc('ostap').talk = (npc, done) => {
       L('Now I can stay awake long enough to write your duma. Only a duma needs an ending, and I haven\'t got one. That part, you\'ll have to bring me yourself.', 'Тепер я не спатиму, доки не напишу твою думу. Тільки думі потрібен кінець, а в мене його нема. Цю частину тобі доведеться принести {{самому|самій}}.')], done);
   }
   if (!S.f.yaga) return ostapBefore(npc, done);
-  say(npc.name, [L('Sit, sit. What\'ll it be?', 'Сідай, сідай. Що будемо?')], null, menu([L('Your duma', 'Моя дума'), L('Practise words', 'Повправлятися'), L('Goodbye', 'До побачення')],
+  say(npc.name, [L('Sit, sit. What\'ll it be?', 'Сідай, сідай. Що будемо?')], null, menu([L('Your duma', 'Моя дума'), L('Practice words', 'Повправлятися'), L('Goodbye', 'До побачення')],
     i => i === 0 ? singDuma(done) : i === 1 ? ostapBefore(npc, done) : done()));
 };
 

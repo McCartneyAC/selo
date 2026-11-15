@@ -4,7 +4,7 @@
 const CSL = [   // [word, English, Ukrainian, a note]
   ['начало', 'beginning', 'початок', 'Въ началѣ бѣ Слово: in the beginning was the Word. The first line of John\'s Gospel.'],
   ['бѣ', 'was', 'був, було', 'An old past tense of бути. The letter ѣ (ять) is read as і in Ukrainian: that\'s why Slavonic хлѣбъ is Ukrainian хліб.'],
-  ['къ', 'to, towards', 'до, к', 'Слово бѣ къ Богу: the Word was with God. The hard sign ъ at the end of a word is silent.'],
+  ['къ', 'to, toward', 'до, к', 'Слово бѣ къ Богу: the Word was with God. The hard sign ъ at the end of a word is silent.'],
   ['блаженъ', 'blessed, happy', 'щасливий, блаженний', 'The first word of the Psalter. Ukrainian keeps it as блаженний.'],
   ['мужъ', 'a man', 'чоловік, муж', 'Ukrainian still says муж for a man of standing: a statesman is державний муж.'],
   ['иже', 'who, which', 'який, що', 'A relative pronoun. You\'ll hear it in the Lord\'s Prayer too: Отче нашъ, иже еси.'],
@@ -16,7 +16,7 @@ const CSL = [   // [word, English, Ukrainian, a note]
   ['имя', 'name', 'ім\'я', 'Да святится имя Твое: hallowed be Thy name. Ukrainian ім\'я comes from the same word.'],
   ['насущный', 'daily, needful', 'щоденний, насущний', 'Хлѣбъ нашъ насущный: our daily bread. Ukrainian keeps насущний: насущна потреба, a vital need.'],
   ['даждь', 'give!', 'дай', 'An old imperative of дати. Compare Ukrainian дай.'],
-  ['днесь', 'today', 'сьогодні, нині', 'Днесь: this day. The Hutsuls say нині, which is the same idea, from the same old roots.'],
+  ['днесь', 'today', 'сьогодні, нині', 'Днесь: this day (день + сь). The Hutsuls say нині, now, which means much the same, though it comes from a different root.'],
   ['путь', 'way, road', 'шлях, дорога', 'Азъ есмь путь, и истина, и животъ. Ukrainian путь and путівник (a guidebook) come from it.'],
   ['истина', 'truth', 'істина, правда', 'Ukrainian keeps it as істина, a grand word for the truth.'],
   ['животъ', 'life', 'життя', 'A false friend! In Ukrainian живіт is the belly, but in Slavonic животъ is life itself.'],
@@ -25,12 +25,12 @@ const CSL = [   // [word, English, Ukrainian, a note]
   ['толцыте', 'knock!', 'стукайте', 'Толцыте, и отверзется вамъ: knock, and it shall be opened unto you.'],
   ['помилуй', 'have mercy', 'помилуй, змилуйся', 'Господи, помилуй: Lord, have mercy. The words you hear most often in any Ukrainian church.'],
   ['мя', 'me', 'мене', 'An old short form of мене, the way ся is the short form of себе. That ся still lives on in Ukrainian, at the end of сміятися.'],
-  ['велицѣй', 'great (in the locative)', 'великій', 'По велицѣй милости Твоей: according to Thy great mercy. Locative, like у великій хаті.'],
+  ['велицѣй', 'great (in the dative)', 'великій', 'По велицѣй милости Твоей: according to Thy great mercy. After по, Church Slavonic takes the dative. In the feminine it looks just like the locative, which is what modern Ukrainian uses there: по великій милості.'],
   ['кротцыи', 'the meek, the gentle', 'лагідні, покірні', 'Блажени кротцыи: blessed are the meek.'],
   ['яко', 'for, because, as', 'бо, як', 'Ukrainian як comes from the same word.'],
   ['тіи', 'they, those', 'ті, вони', 'Яко тіи наслѣдятъ землю: for they shall inherit the earth.'],
   ['пріидите', 'come!', 'прийдіть', 'An imperative to many: come, all of you. Ukrainian прийдіть.'],
-  ['вси', 'all', 'всі, усі', 'Вси труждающіися: all you who labour.'],
+  ['вси', 'all', 'всі, усі', 'Вси труждающіися: all you who labor.'],
   ['упокою', 'I will give rest', 'заспокою', 'И азъ упокою вы: and I will give you rest. Ukrainian спокій, rest and peace, is the same root.'],
 ];
 // where each Gospel lies open, the verse, and the three words it teaches
@@ -42,9 +42,9 @@ const GOSPEL = {
   polchurch: ['Хлѣбъ нашъ насущный даждь намъ днесь.', 'Give us this day our daily bread. (Matthew 6:11)', ['насущный', 'даждь', 'днесь']],
   hutchurch: ['Азъ есмь путь, и истина, и животъ.', 'I am the way, the truth, and the life. (John 14:6)', ['путь', 'истина', 'животъ']],
   lipchurch: ['Ищите, и обрящете; толцыте, и отверзется вамъ.', 'Seek, and ye shall find; knock, and it shall be opened unto you. (Matthew 7:7)', ['ищите', 'обрящете', 'толцыте']],
-  cell: ['Помилуй мя, Боже, по велицѣй милости Твоей.', 'Have mercy upon me, O God, according to Thy great mercy. (Psalm 51:1)', ['помилуй', 'мя', 'велицѣй']],
+  cell: ['Помилуй мя, Боже, по велицѣй милости Твоей.', 'Have mercy upon me, O God, according to Thy great mercy. (Psalm 50 (51))', ['помилуй', 'мя', 'велицѣй']],
   caves: ['Блажени кротцыи, яко тіи наслѣдятъ землю.', 'Blessed are the meek: for they shall inherit the earth. (Matthew 5:5)', ['кротцыи', 'яко', 'тіи']],
-  bakota: ['Пріидите ко Мнѣ вси труждающіися и обремененніи, и Азъ упокою вы.', 'Come unto me, all ye that labour and are heavy laden, and I will give you rest. (Matthew 11:28)', ['пріидите', 'вси', 'упокою']],
+  bakota: ['Пріидите ко Мнѣ вси труждающіися и обремененніи, и Азъ упокою вы.', 'Come unto me, all ye that labor and are heavy laden, and I will give you rest. (Matthew 11:28)', ['пріидите', 'вси', 'упокою']],
 };
 const csIdx = w => CSL.findIndex(c => c[0] === w);
 const heardCS = w => !!(S.cs && S.cs[w]);
@@ -74,6 +74,6 @@ function renderCS(scroll) {
   if (scroll) { const s = dxList.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' }); }
   const c = CSL[D.rows[D.sel]];
   const where = Object.keys(GOSPEL).find(a => GOSPEL[a][2].includes(c[0]));
-  dxCard.innerHTML = heardCS(c[0]) ? `<div class="nm">${esc(c[0])}</div><div class="en">${esc(c[1])} · ${esc(c[2])}</div><div class="ex">${esc(c[3])}</div><div class="meta">Церковнослов'янська: Church Slavonic. A bonus word, not one of the 1,000. From the Gospel in ${esc(AREAS[where].name)}.</div>`
+  dxCard.innerHTML = heardCS(c[0]) ? `<div class="nm">${esc(c[0])}</div><div class="en">${esc(c[1])} · ${esc(c[2])}</div><div class="ex">${esc(c[3])}</div><div class="meta">Церковнослов'янська: Church Slavonic. A bonus word, not one of the ${N} you are catching. From the Gospel in ${esc(AREAS[where].name)}.</div>`
     : `<div class="nm">???</div><div class="meta">A Church Slavonic word you haven't read yet. ${Object.keys(S.cs || {}).length} of ${CSL.length} read. Every church with a lectern has its Gospel open at a different verse.</div>`;
 }

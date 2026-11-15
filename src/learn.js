@@ -13,7 +13,7 @@ const BASE_N = WORDS.length;
 const LEVEL_IDS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 const LEVEL_INFO = { A1: 'the first words', A2: 'everyday words', B1: 'getting by', B2: 'getting on', C1: 'reading and arguing' };
 // 25 places, grouped by theme (tools/levels.py): the nine home villages around Vyshneve, then the journey across
-// Ukraine. Each holds a 25th of the level: 35 or 36 words at A1.
+// Ukraine. Each holds the words of its theme: from half to 1.6 times a 25th of the level (tools/levels.py).
 const ZONE_AREA = ['vyshneve', 'khutir', 'steppe', 'kalynivka', 'fair', 'lake', 'ferry', 'marsh', 'forest',
   'khortytsia', 'rapids', 'podil', 'lavra', 'polissia', 'bir', 'verkhovyna', 'polonyna', 'chornohora', 'synevyr',
   'kamianets', 'dniester', 'odesa', 'vylkove', 'liman', 'lviv'];
@@ -46,7 +46,7 @@ function loadLevelClips(id) {
   levelClips[id] = fetch('clips-' + id + '.json').then(r => r.ok ? r.json() : []).catch(() => []);
   return levelClips[id].then(fill);
 }
-// a place's keeper tests you once you know three quarters of its words (30 of 40 at A1)
+// a place's keeper tests you once you know three quarters of its words
 const trialNeed = z => Math.ceil(.75 * ZONES[z].length);
 const perPlace = () => Math.round(N / NZ);
 const isA1 = () => LEVEL === 'A1';
@@ -78,7 +78,7 @@ const BADGES = [
   { name: 'Trembita pysanka', keeper: 'the trembita player', col: ['#3a6a8a', '#f0b440'] },
   { name: 'Polonyna pysanka', keeper: 'the vivchar', col: ['#9cc46a', '#f4f1e6'] },
   { name: 'Mountain pysanka', keeper: 'the molfar', col: ['#8a8fb0', '#e8eaf4'] },
-  { name: 'Synevyr pysanka', keeper: 'Syn', col: ['#4f9aa8', '#cfe8ea'] },
+  { name: 'Synevyr pysanka', keeper: 'Vyr', col: ['#4f9aa8', '#cfe8ea'] },
   { name: 'Castle pysanka', keeper: 'the castle keeper', col: ['#c9a46a', '#d8473f'] },
   { name: 'Canyon pysanka', keeper: 'the raftsman', col: ['#7cbf8a', '#e8d8b0'] },
   { name: 'Sea pysanka', keeper: 'the Odesa fisherwoman', col: ['#6fb2e0', '#f6e7c4'] },
@@ -165,7 +165,13 @@ async function loadSave() {
   if (!S.name) for (const key of LEVEL_IDS.flatMap(id => [SAVE_KEY + '-' + id, OLD_KEY + (id === 'A1' ? '' : '-' + id)])) {
     try { const o = JSON.parse(localStorage.getItem(key) || 'null'); if (o && o.name) { S.name = o.name; if (o.sex) S.sex = o.sex; break; } } catch { /* none */ }
   }
+  // has this browser already seen the game through at another level? Ostap and Baba Hanna remember
+  RETURNED = null;
+  for (const id of LEVEL_IDS) if (id !== LEVEL) {
+    try { const o = JSON.parse(localStorage.getItem(SAVE_KEY + '-' + id) || 'null'); if (o && o.f && o.f.yaga) { RETURNED = id; break; } } catch { /* none */ }
+  }
 }
+let RETURNED = null;
 const LEVEL_PICK = 'vyshneve-level';
 const savedLevel = () => { try { return localStorage.getItem(LEVEL_PICK) || 'A1'; } catch { return 'A1'; } };
 
@@ -485,7 +491,7 @@ function renderHud() {
   if (PLAYTEST) hud.appendChild(Object.assign(document.createElement('span'), { className: 'due', textContent: 'TEST' }));
   hud.appendChild(Object.assign(makeBook(), { className: 'px book' }));
   hud.appendChild(Object.assign(document.createElement('span'), { textContent: caughtCount() + '/' + N }));
-  if (due) hud.appendChild(Object.assign(document.createElement('span'), { className: 'due', textContent: '↻' + due, title: due + ' words ready to practise' }));
+  if (due) hud.appendChild(Object.assign(document.createElement('span'), { className: 'due', textContent: '↻' + due, title: due + ' words ready to practice' }));
   const b = badgeCount();
   if (b) {
     hud.appendChild(Object.assign(makePysanka(BADGES[0].col), { className: 'px' }));
@@ -546,7 +552,7 @@ function qType(i) {
 }
 // Wrong answers that look like the right one: rank every word by edit distance
 // from the target's Ukrainian form, then pick at random among the closest 5
-// (15 suited kartochky.html's 8,000 words; 1,000 needs a tighter circle).
+// (15 suited kartochky.html's 8,000 words; a level of a few thousand needs a tighter circle).
 function levenshtein(a, b) {
   const m = a.length, n = b.length;
   let prev = new Array(n + 1), cur = new Array(n + 1);
@@ -561,11 +567,31 @@ function levenshtein(a, b) {
 const nearCache = new Map();
 // wrong answers come from the words in play; an A1 word met outside its level draws on the A1 words
 const poolFor = i => inPlay(i) ? ACTIVE : WORDS.slice(0, BASE_N).map((_, j) => j);
+// a wrong answer mustn't also be right: no shared sense (довго: "for a long time" vs "long ago; for a long time"),
+// and no -ся partner (вчити / вчитися)
+const senseCache = new Map();
+function senses(j) {
+  if (senseCache.has(j)) return senseCache.get(j);
+  const out = new Set();
+  for (const g of [WORDS[j][2], WORDS[j][3]]) for (let p of g.replace(/\([^)]*\)/g, ' ').split(/[;,:=]/)) {
+    p = p.toLowerCase().replace(/[а-яіїєґ’'.…!?"«»]+/g, ' ').replace(/^\s*(to|a|an|the)\s+/, '').replace(/\s+/g, ' ').trim();
+    if (p.length > 1) out.add(p);
+  }
+  senseCache.set(j, out);
+  return out;
+}
+const reflexBase = w => w.toLowerCase().split(/\s*[=,]\s*/)[0].replace(/с[яь]$/, '');
+function clashes(i, j) {
+  if (reflexBase(WORDS[i][0]) === reflexBase(WORDS[j][0])) return true;
+  const a = senses(i);
+  for (const x of senses(j)) if (a.has(x)) return true;
+  return false;
+}
 function nearest(i) {
   if (nearCache.has(i)) return nearCache.get(i);
   const t = WORDS[i][0].toLowerCase(), en = WORDS[i][3].toLowerCase();
   const list = [];
-  for (const j of poolFor(i)) if (j !== i && WORDS[j][3].toLowerCase() !== en && WORDS[j][0] !== WORDS[i][0]) list.push([levenshtein(t, WORDS[j][0].toLowerCase()), j]);
+  for (const j of poolFor(i)) if (j !== i && WORDS[j][3].toLowerCase() !== en && WORDS[j][0] !== WORDS[i][0] && !clashes(i, j)) list.push([levenshtein(t, WORDS[j][0].toLowerCase()), j]);
   list.sort((a, b) => a[0] - b[0]);
   const near = list.map(p => p[1]);
   nearCache.set(i, near);
@@ -580,7 +606,7 @@ function distractors(i, n, key) {
     seen.add(WORDS[j][key]); out.push(j);
   }
   const pool = poolFor(i);
-  while (out.length < n) { const j = pool[rnd(pool.length)]; if (j !== i && !seen.has(WORDS[j][key])) { seen.add(WORDS[j][key]); out.push(j); } }
+  for (let g = 0; out.length < n && g < 5000; g++) { const j = pool[rnd(pool.length)]; if (j !== i && !seen.has(WORDS[j][key]) && (g > 4000 || !clashes(i, j))) { seen.add(WORDS[j][key]); out.push(j); } }
   return out;
 }
 function openQuiz(cfg) {
@@ -635,6 +661,17 @@ function nextQuestion(first) {
     playWord(i);
   } else { askQuestion(); return; }
 }
+// the English to ask with, with any Ukrainian in it cut off, so the gloss doesn't give the answer away
+// ("to call: мене звати … = my name is …" asks "to call"); the full gloss still shows on the result card
+function promptGloss(w) {
+  let en = w[2].length <= 60 ? w[2] : w[3];
+  const m = en.search(/[а-яіїєґ]/i);
+  if (m < 0) return en;
+  en = en.slice(0, m);
+  if ((en.match(/\(/g) || []).length > (en.match(/\)/g) || []).length) en = en.slice(0, en.lastIndexOf('('));
+  en = en.replace(/[\s:;,=—–«"(-]+$/, '');
+  return en || w[3].replace(/[\s:;,=—–«"(-]*[а-яіїєґ].*$/i, '') || w[3];
+}
 function askQuestion() {
   const i = Q.i, w = WORDS[i];
   Q.phase = 'q';
@@ -646,12 +683,12 @@ function askQuestion() {
     renderOpts(j => esc(WORDS[j][3]), false);
     if (Q.mode !== 'wild' || Q.k > 0) playWord(i);
   } else if (Q.type === 'en2ua') {
-    const en = w[2].length <= 60 ? w[2] : w[3];
+    const en = promptGloss(w);
     bMsg.innerHTML = `How do you say <span class="en">${esc(en)}</span>`;
     Q.opts = shuffle([i, ...distractors(i, 3, 0)]);
     renderOpts(j => esc(WORDS[j][1]), true);
   } else {
-    const en = w[2].length <= 60 ? w[2] : w[3];
+    const en = promptGloss(w);
     const target = [...w[4]];
     const extra = lvl(i) >= 4 ? 4 : 2, ALPHA = 'абвгґдеєжзиіїйклмнопрстуфхцчшщьюя';
     const letters = target.slice();
@@ -700,6 +737,8 @@ function grade(i, right) {
   const n = nowMin(), e = S.w[i] || [0, n, 0, 0, 0];
   e[2]++;
   const before = e[0];
+  // a right answer only moves a word up when it's due (or new): asking again early doesn't skip the wait
+  if (right && before >= 1 && e[1] > n) { e[3]++; S.w[i] = e; return { before, after: before, early: true }; }
   if (right) { e[0] = Math.min(5, Math.max(1, e[0] + 1)); e[3]++; e[1] = n + INTERVAL[e[0]] * (before >= 5 ? 2 : 1); }
   else { if (e[0] >= 1) e[0] = Math.max(1, e[0] - 1); e[4]++; e[1] = n + 1; }
   S.w[i] = e;
@@ -739,13 +778,14 @@ function answer(right) {
   if (Q.mode === 'road') return roadAnswer(right);
   Q.phase = 'res';
   const i = Q.i, w = WORDS[i], wasCaught = caught(i);
-  const { before, after } = grade(i, right);
+  const { before, after, early } = grade(i, right);
   if (right) Q.score++;
   if (Q.mode === 'trial') bProg.textContent = `TRIAL ${Q.k + 1}/${Q.ids.length}  ✓${Q.score}`;
   const ex = w[6][0];
   const exLine = ex ? `<span class="ex">${exHTML(ex[0])}<br><i>${esc(ex[1])}</i></span>` : '';
   let head;
   if (right && !wasCaught) { head = `<span class="ok">Caught!</span> It's in your словник.`; sfx('ok'); spiritFor(i, 'caught'); }
+  else if (right && early) { head = `<span class="ok">Right!</span> Level ${after}. Not due yet, so it keeps its place.`; sfx('ok'); }
   else if (right) { head = after >= 5 && before < 5 ? `<span class="ok">★ Mastered!</span>` : `<span class="ok">Right!</span> Level ${after}. Back in ${whenText(INTERVAL[after])}.`; sfx(after > before ? 'level' : 'ok'); }
   else if (!wasCaught) { head = `<span class="no">It slipped away!</span> It'll be back.`; sfx('no'); spiritFor(i, 'flee'); }
   else { head = `<span class="no">Not quite.</span> Back to level ${after}.`; sfx('no'); }
@@ -782,8 +822,9 @@ function quizKey(e) {
     const sp = Q.spell, raw = e.raw || e.key;
     if (raw === 'Backspace') { popTile(); return true; }
     if (raw === 'Escape' || ((raw === 'x' || raw === 'X') && !e.repeat)) { flee(); return true; }
-    const ch = raw.toLowerCase();
-    if (ch.length === 1 && /[а-яіїєґ'ʼ]/.test(ch)) {
+    let ch = raw.toLowerCase();
+    if (/^['ʼ’`]$/.test(ch)) ch = '’';   // the tiles hold ’; any apostrophe key types it
+    if (ch.length === 1 && /[а-яіїєґ’]/.test(ch)) {
       const n = sp.tiles.findIndex(t => !t.used && t.ch === ch);
       if (n >= 0) pushTile(n);
       return true;
@@ -821,7 +862,7 @@ function flee() {
 // ─── The словник ──────────────────────────────────────────────────────────
 const dex = document.getElementById('dex'), dxList = document.getElementById('dxList'), dxCard = document.getElementById('dxCard'),
   dxTabs = document.getElementById('dxTabs'), dxCount = document.getElementById('dxCount'), dxSound = document.getElementById('dxSound');
-const TABS = [['ТОРБА', 'bag'], ['ALL', null], ['TO PRACTISE', 'due'], ['ТУТ', 'here'], ['КРАЙ', 'land'], ['ГОВІРКА', 'dial'], ['ЦЕРКВА', 'cs']];
+const TABS = [['ТОРБА', 'bag'], ['ALL', null], ['TO Practice', 'due'], ['ТУТ', 'here'], ['КРАЙ', 'land'], ['ГОВІРКА', 'dial'], ['ЦЕРКВА', 'cs']];
 let D = { tab: 1, sel: 0, rows: [] };
 function openDex() {
   if (!S.f.book) return say('', ['You don\'t have a словник yet. Ostap the kobzar is waiting by the church.']);
@@ -844,7 +885,7 @@ function renderDex(scroll) {
   D.rows = dexRows();
   if (D.sel >= D.rows.length) D.sel = Math.max(0, D.rows.length - 1);
   dxCount.textContent = `${caughtCount()}/${N} · ★${masteredCount()} · ↻${dueList().length}`;
-  dxCount.title = `${caughtCount()} of ${N} words caught, ${masteredCount()} mastered, ${dueList().length} to practise`;
+  dxCount.title = `${caughtCount()} of ${N} words caught, ${masteredCount()} mastered, ${dueList().length} to practice`;
   dxSound.textContent = soundOn() ? 'SOUND ON' : 'SOUND OFF';
   dxMusic.textContent = S.f.music === 0 ? 'MUSIC OFF' : 'MUSIC ON';
   dxLang.textContent = { auto: 'TALK: AUTO', en: 'TALK: ENG', ua: 'TALK: УКР' }[S.f.lang || 'auto'];
@@ -860,7 +901,7 @@ function renderDex(scroll) {
   if (TABS[D.tab][1] === 'dial') return renderDial(scroll);
   if (TABS[D.tab][1] === 'cs') return renderCS(scroll);
   dxList.innerHTML = '';
-  if (!D.rows.length) dxList.innerHTML = `<div class="dx-row"><span></span><span class="w">${TABS[D.tab][1] === 'due' ? 'Nothing to practise yet.' : TABS[D.tab][1] === 'here' ? 'No wild words live indoors.' : ''}</span></div>`;
+  if (!D.rows.length) dxList.innerHTML = `<div class="dx-row"><span></span><span class="w">${TABS[D.tab][1] === 'due' ? 'Nothing to practice yet.' : TABS[D.tab][1] === 'here' ? 'No wild words live indoors.' : ''}</span></div>`;
   const frag = document.createDocumentFragment();
   D.rows.forEach((i, n) => {
     const b = document.createElement('button'); b.type = 'button';
@@ -890,12 +931,12 @@ function renderCard() {
   const due = e[1] - nowMin();
   dxCard.insertAdjacentHTML('beforeend', `<div class="nm">${esc(w[1])}</div><div class="en">${esc(w[2])}</div>` +
     w[6].map(([a, b]) => `<div class="ex">${exHTML(a)}<br><i>${esc(b)}</i></div>`).join('') +
-    `<div class="meta">${pips(i)} ${e[0] >= 5 ? '★ mastered' : 'level ' + e[0]} · right ${e[3]}, wrong ${e[4]}<br>${due <= 0 ? 'Ready to practise now' : 'Next practice in ' + whenText(due)} · from ${AREAS[ZONE_AREA[zoneOf(i)]].name}</div>`);
+    `<div class="meta">${pips(i)} ${e[0] >= 5 ? '★ mastered' : 'level ' + e[0]} · right ${e[3]}, wrong ${e[4]}<br>${due <= 0 ? 'Ready to practice now' : 'Next practice in ' + whenText(due)} · from ${AREAS[ZONE_AREA[zoneOf(i)]].name}</div>`);
   const play = document.createElement('button'); play.type = 'button'; play.textContent = '▶ HEAR IT';
   play.addEventListener('click', () => { unlockAudio(); playWord(i); });
   dxCard.appendChild(play);
 }
-dxSound.addEventListener('click', () => { unlockAudio(); S.f.mute = soundOn() ? 1 : 0; saveSoon(); renderDex(false); if (soundOn()) playWord(D.rows[D.sel] != null && TABS[D.tab][1] !== 'bag' ? D.rows[D.sel] : 777); });
+dxSound.addEventListener('click', () => { unlockAudio(); S.f.mute = soundOn() ? 1 : 0; saveSoon(); renderDex(false); if (soundOn()) playWord(D.rows[D.sel] != null && TABS[D.tab][1] !== 'bag' ? D.rows[D.sel] : Math.max(0, W_('слово'))); });
 const dxMusic = document.getElementById('dxMusic'), dxLang = document.getElementById('dxLang');
 // who speaks Ukrainian: AUTO lets each person switch as you win pysanky
 dxLang.addEventListener('click', () => { S.f.lang = { auto: 'ua', ua: 'en', en: 'auto' }[S.f.lang || 'auto']; saveSoon(); renderDex(false); });

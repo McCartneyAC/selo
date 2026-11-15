@@ -6,7 +6,7 @@ Object.assign(ITEMS, {
   maznytsia: { ua: 'мазниця', en: 'a chumak\'s tar pot', desc: 'The chumaks greased their wheels from it. They say you could smell a chumak a mile away, and hear him singing two.' },
   mushlia: { ua: 'мушля', en: 'a seashell from Odesa', desc: 'From Titka Sonia. Hold it to your ear and you hear the sea. Listen longer and you hear the sea telling jokes.' },
   posylky: { ua: 'посилки', en: 'a sack of parcels', desc: 'Nastia\'s post, with every address washed off. You know who they\'re for only by asking.' },
-  pero: { ua: 'перо пелікана', en: 'a pelican feather', desc: 'Found floating at kilometre zero, where the Danube runs into the sea. Long, white and faintly pink.' },
+  pero: { ua: 'перо пелікана', en: 'a pelican feather', desc: 'Found floating at kilometer zero, where the Danube runs into the sea. Long, white and faintly pink.' },
 });
 EXIT_LOCK['steppe>liman'] = () => {
   if (badgeCount() >= SEA_NEED) return false;
@@ -76,10 +76,10 @@ const JOKES = {
       ['— Фімо, ви знаєте, котра година? — ___, знаю. А вам навіщо?', '"Fima, do you know what time it is?" "Of course I know. What do you want it for?"', ['Звичайно', 'Мабуть', 'Може'], 0, 'звичайно: of course, certainly. Also "usual": звичайний.']]],
   captain: [2, [L('«Капітане, скільки років вашому кораблю?» Then something. Something about a puddle. My crew used to fall off the deck laughing at this one.', '«Капітане, скільки років вашому кораблю?» А далі щось. Щось про калюжу. Моя команда падала з палуби від сміху.')],
     [['— Скільки років вашому кораблю? — Він ___ старий, що пам\'ятає, як море було калюжею.', '"How old is your ship?" "It\'s so old it remembers when the sea was a puddle."', ['такий', 'точно', 'добре'], 0, 'такий: such, so. Такий старий: so old.'],
-      ['— Капітане, коли ми вже поїдемо? — Коли я ___ доп\'ю чай.', '"Captain, when are we leaving?" "When I finally finish my tea."', ['нарешті', 'наприклад', 'насправді'], 0, 'нарешті: finally, at last.']]],
+      ['— Капітане, коли ми вже відпливемо? — Коли я ___ доп\'ю чай.', '"Captain, when do we sail?" "When I finally finish my tea."', ['нарешті', 'наприклад', 'насправді'], 0, 'нарешті: finally, at last.']]],
   mania: [4, [L('«Маню, вода холодна?» And then... and then nothing. There\'s supposed to be a penguin in it somewhere.', '«Маню, вода холодна?» А тоді... а тоді нічого. Там десь мав бути пінгвін.')],
     [['— Маню, вода холодна? — Ну як вам ___? Для пінгвіна — тепла.', '"Mania, is the water cold?" "Well, how shall I put it? For a penguin, it\'s warm."', ['сказати', 'питати', 'називатися'], 0, 'казати, сказати: to say, to tell. Як вам сказати: how shall I put it.'],
-      ['— Це ваш чоловік спить на пляжі? — Мій. Він ___ відпочиває від відпочинку.', '"Is that your husband asleep on the beach?" "Mine. He\'s just resting from his holiday."', ['просто', 'точно', 'однаково'], 0, 'просто: simply, just. Also: easy, simple.']]],
+      ['— Це ваш чоловік спить на пляжі? — Мій. Він ___ відпочиває від відпочинку.', '"Is that your husband asleep on the beach?" "Mine. He\'s just resting from his vacation."', ['просто', 'точно', 'однаково'], 0, 'просто: simply, just. Also: easy, simple.']]],
   lyova: [8, [L('«Льово, скільки сходинок на Потьомкінських сходах?» Униз — сто дев\'яносто дві. А вгору... Вгору... I\'ve forgotten. Me! Lyova!', '«Льово, скільки сходинок на Потьомкінських сходах?» Униз — сто дев\'яносто дві. А вгору... Вгору... Я забув. Я! Льова!')],
     [['— Скільки сходинок на сходах? — Униз — сто дев\'яносто дві. А вгору, ___, тисяча.', '"How many steps are there on the stairs?" "Going down, a hundred and ninety-two. Going up, obviously, a thousand."', ['очевидно', 'нарешті', 'натомість'], 0, 'очевидно: obviously.'],
       ['— Льово, ви чули ___? — Ні. А що, вже є що чути?', '"Lyova, have you heard the news?" "No. Why, is there already something to hear?"', ['новини', 'розмову', 'корабель'], 0, 'новина, новини: news.']]],
@@ -182,17 +182,17 @@ function nastiaTalk(npc, done) {
   if (p === 1) {
     S.f.posh = 2; take('posylky'); saveSoon(); sfx('badge');
     return say(n, [L('All of them? Even Ulita\'s? You\'re a better {{postman|postwoman}} than I am, and I\'ve got a boat.', 'Усі? Навіть Улітині? Ти {{кращий|краща}} листоноша, ніж я, а в мене ж човен.'),
-      L('Go and see Did Fedot, by his house on the south canal. He said if anybody sorted out the post, he\'d take them to kilometre zero. He only offers that to people he likes.', 'Сходи до діда Федота, біля його хати на південному каналі. Він казав, що як хтось розбереться з поштою, він повезе його на нульовий кілометр. Він пропонує таке тільки тим, хто йому до вподоби.')], done);
+      L('Go and see Did Fedot, by his house on the south canal. He said if anybody sorted out the post, he\'d take them to kilometer zero. He only offers that to people he likes.', 'Сходи до діда Федота, біля його хати на південному каналі. Він казав, що як хтось розбереться з поштою, він повезе його на нульовий кілометр. Він пропонує таке тільки тим, хто йому до вподоби.')], done);
   }
   say(n, [L('Пошта is working, the canals are full, and Ulita can see. A good week.', 'Пошта працює, канали повні, а Уліта бачить. Добрий тиждень.')], done);
 }
 function fedotTalk(npc, done) {
   const n = npc.name, p = poshStep();
   const test = () => keeperTalk(22, [L('The little words. І, а, але, або; мій, твій, його, її; де, коли, чому, як. They\'re like the bridges here: nobody notices them, and without them you can\'t get anywhere.', 'Маленькі слова. І, а, але, або; мій, твій, його, її; де, коли, чому, як. Вони як наші містки: ніхто їх не помічає, а без них нікуди не дійдеш.')])(npc, done);
-  const chat = () => say(n, [L('Човняр: a boatman. In Vylkove you don\'t walk to the neighbours, you row. Every child gets a boat before a bicycle. Some never get a bicycle at all. What for?', 'Човняр. У Вилковому до сусідів не ходять, а веслують. Кожна дитина має човна раніше, ніж велосипед. Дехто велосипеда так і не має. А навіщо?'),
+  const chat = () => say(n, [L('Човняр: a boatman. In Vylkove you don\'t walk to the neighbors, you row. Every child gets a boat before a bicycle. Some never get a bicycle at all. What for?', 'Човняр. У Вилковому до сусідів не ходять, а веслують. Кожна дитина має човна раніше, ніж велосипед. Дехто велосипеда так і не має. А навіщо?'),
     L('My grandfather\'s grandfather came here three hundred years ago, from the north, for the old faith. We still keep it. And our beards.', 'Дід мого діда прийшов сюди триста років тому, з півночі, заради старої віри. Ми її досі тримаємо. І бороди теж.')], done);
   const zero = () => {
-    if (p < 2) return say(n, [L('Kilometre zero? That\'s for people who\'ve helped. Nastia\'s post is in a mess. Start there.', 'Нульовий кілометр? Це для тих, хто допоміг. У Насті з поштою біда. Почни з неї.')], done);
+    if (p < 2) return say(n, [L('Kilometer zero? That\'s for people who\'ve helped. Nastia\'s post is in a mess. Start there.', 'Нульовий кілометр? Це для тих, хто допоміг. У Насті з поштою біда. Почни з неї.')], done);
     if (p >= 3) return say(n, [L('You\'ve been to the end of the Danube. Most people never see the end of anything.', 'Ти {{був|була}} на кінці Дунаю. Більшість людей ніколи не бачить кінця нічого.')], done);
     S.f.posh = 3; saveSoon(); sfx('night');
     say('', [L('[Did Fedot rows you out of the canals, past the last reed houses, down the widest arm of the Danube. The banks drop away. Then there are no banks at all.]', '[Дід Федот вивозить тебе з каналів, повз останні очеретяні хати, найширшим рукавом Дунаю. Береги відступають. А тоді берегів зовсім немає.]'),
@@ -201,7 +201,7 @@ function fedotTalk(npc, done) {
         L('[A feather floats up against the boat. Fedot fishes it out and hands it to you without a word.]', '[До човна підпливає перо. Федот виловлює його й мовчки дає тобі.]'), give('pero')], done));
   };
   if (!S.f.book) return chat();
-  say(n, [L('Христос посеред нас. Sit, if you like boats.', 'Христос посеред нас. Сідай, якщо любиш човни.')], null, menu([L('Your test', 'Ваше випробування'), L('Kilometre zero', 'Нульовий кілометр'), L('Just chatting', 'Просто поговорити')], i => i === 0 ? test() : i === 1 ? zero() : chat()));
+  say(n, [L('Христос посеред нас. Sit, if you like boats.', 'Христос посеред нас. Сідай, якщо любиш човни.')], null, menu([L('Your test', 'Ваше випробування'), L('Kilometer zero', 'Нульовий кілометр'), L('Just chatting', 'Просто поговорити')], i => i === 0 ? test() : i === 1 ? zero() : chat()));
 }
 function tolikTalk(npc, done) {
   say(npc.name, [L('Back to Odesa? The «Ракета» goes when the captain says. He\'s on the other end, so he\'s said.', 'Назад до Одеси? «Ракета» відпливає, коли скаже капітан. Він на тому кінці, отже, вже сказав.')], null, yesNo(go => {
@@ -257,8 +257,8 @@ Object.assign(NPCS, {
       talk: parcelTalk('kuzma', [L('Риба: fish. Осетер: a sturgeon. Оселедець: a herring. Дунайський оселедець is the best herring in the world, and I would know: I\'ve eaten all the others.', 'Риба. Осетер. Оселедець. Дунайський оселедець — найкращий у світі, і я знаю, бо їв усі інші.')],
         [L('A new net! My wife ordered it. She says the old one has more holes than net. She\'s right, but don\'t tell her.', 'Нова сітка! Дружина замовила. Каже, у старій більше дірок, ніж сітки. Вона права, тільки їй не кажи.')]) },
     { id: 'vasyl-v', name: 'Savva', ua: 13, tx: 25, ty: 23, dir: 'down', pal: P_LIPOVAN('#7a3e8a'), mods: ['moustache'],
-      talk: parcelTalk('vasyl', [L('Акордеон! I play it every day. The neighbours have learned to swim faster.', 'Акордеон! Граю щодня. Сусіди навчилися швидше плавати.')],
-        [L('New music! Now I can play something the neighbours haven\'t heard before. They\'ll be so pleased. [He doesn\'t sound sure.]', 'Нові ноти! Тепер зіграю щось, чого сусіди ще не чули. Вони так зрадіють. [Він каже це не дуже впевнено.]')]) },
+      talk: parcelTalk('vasyl', [L('Акордеон! I play it every day. The neighbors have learned to swim faster.', 'Акордеон! Граю щодня. Сусіди навчилися швидше плавати.')],
+        [L('New music! Now I can play something the neighbors haven\'t heard before. They\'ll be so pleased. [He doesn\'t sound sure.]', 'Нові ноти! Тепер зіграю щось, чого сусіди ще не чули. Вони так зрадіють. [Він каже це не дуже впевнено.]')]) },
     { id: 'sashko', name: 'Sashko and Natalka', ua: 13, tx: 39, ty: 17, dir: 'down', pal: P_SEA('#e8794a', '#3f6fc4'),
       talk: parcelTalk('twins', [L('We\'re twins. Близнюки. I\'m older. By eleven minutes. She says that doesn\'t count. It counts.', 'Ми близнюки. Я старший. На одинадцять хвилин. Вона каже, що це не рахується. Рахується.')],
         [L('Our kite! We\'re going to fly it over the Danube, all the way to Romania! [Natalka:] Not all the way.', 'Наш змій! Ми запустимо його над Дунаєм, аж до Румунії! [Наталка:] Не аж до.')]) },
@@ -289,6 +289,6 @@ function seaText() {
   if (silStep() === 1) out.push('Help Opanas the salt master count the salt into the chumaks\' carts, at the liman.');
   if (odStep() === 1) out.push(humorCount() < 4 ? `Help Odesa's jokers finish their jokes (${humorCount()} of 4): Fima by the opera, Lyova on the stairs, the captain at the port, Mania on the beach.` : 'Tell Titka Sonia at the Pryvoz that the jokes have their endings.');
   if (poshStep() === 1) out.push(poshCount() < 5 ? `Deliver Nastia's parcels round the canals of Vylkove (${poshCount()} of 5).` : 'Tell Nastia the postwoman that every parcel is delivered.');
-  if (poshStep() === 2) out.push('Ask Did Fedot the boatman in Vylkove about kilometre zero.');
+  if (poshStep() === 2) out.push('Ask Did Fedot the boatman in Vylkove about kilometer zero.');
   return out.length ? ' ' + out.join(' ') : '';
 }

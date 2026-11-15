@@ -33,7 +33,7 @@ const PHONE_CALLS = [
   { bit: 8, who: 'Lukash', where: L('Polissia', 'Полісся'),
     hello: [L('Алло? This is the Polissia village telephone. There\'s one. It\'s in the shop. This is Lukash. Who\'s that?', 'Алло? Це телефон поліського села. Він один. Він у крамниці. Це Лукаш. Хто це?')],
     qs: [['Я так довго ___, що хтось подзвонить!', 'I waited so long for someone to call!', ['чекав', 'почекав', 'чекаю'], 0, 'A long wait, a process: the imperfective чекав. Почекав is to wait a while and be done.'],
-      ['Тільки кажи ___: за мною черга з п\'яти бабусь.', 'Only keep it short: there\'s a queue of five grannies behind me.', ['коротко', 'короткий', 'коротка'], 0, 'How? An adverb, ending in -о: коротко, довго, швидко. Короткий is the adjective.']],
+      ['Тільки кажи ___: за мною черга з п\'яти бабусь.', 'Only keep it short: there\'s a line of five grannies behind me.', ['коротко', 'короткий', 'коротка'], 0, 'How? An adverb, ending in -о: коротко, довго, швидко. Короткий is the adjective.']],
     yes: [L('I\'ll come, and I\'ll bring the sopilka. And if I play it in the old forest, Mavka will hear. Then she\'ll come too.', 'Прийду, і візьму сопілку. А як заграю в старому лісі, Мавка почує. Тоді й вона прийде.')] },
 ];
 function boothTalk(npc, done) {
@@ -71,7 +71,7 @@ function ilonaTalk(npc, done) {
     if (s === 1 && dzvinCount() < 4) return say(n, [L(`${dzvinCount()} of 4 calls made. The booth is in the poshtamt, east side of the square.`, `${dzvinCount()} з 4 дзвінків. Будка в поштамті, на східному боці площі.`)], done);
     if (s === 1) {
       S.f.lviv = 2; saveSoon(); sfx('badge');
-      return say('', [L('[As Pani Ilona looks out of the window, every magpie in Lviv lifts off at once: off the wires, the roofs, the lions\' heads. For a moment the sky over Rynok is black. Then they\'re gone, east, towards the old forest.]', '[Поки пані Ілона дивиться у вікно, усі сороки Львова злітають одночасно: з дротів, із дахів, з левових голів. На мить небо над Ринком чорне. А тоді їх нема: полетіли на схід, до старого лісу.]')], () =>
+      return say('', [L('[As Pani Ilona looks out of the window, every magpie in Lviv lifts off at once: off the wires, the roofs, the lions\' heads. For a moment the sky over Rynok is black. Then they\'re gone, east, toward the old forest.]', '[Поки пані Ілона дивиться у вікно, усі сороки Львова злітають одночасно: з дротів, із дахів, з левових голів. На мить небо над Ринком чорне. А тоді їх нема: полетіли на схід, до старого лісу.]')], () =>
         say(n, [L('She\'s calling them home. She knows, then. Good. Let her know.', 'Вона кличе їх додому. Отже, знає. Добре. Хай знає.'),
           L('Take this, for Ostap the kobzar, when you see him: a jar of Lviv coffee. A duma is a long song, and he\'ll need to stay awake to write yours.', 'Візьми це для кобзаря Остапа, коли його побачиш: банку львівської кави. Дума — довга пісня, і йому треба не спати, щоб написати твою.'), give('kava')], done));
     }

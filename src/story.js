@@ -5,27 +5,31 @@ const P_HANNA = { h: C.red, H: C.red2, w: '#efe8d8', W: '#c9c0ae', r: '#2d4f91',
 const yesNo = (pick) => ({ options: [L('Yes', 'Так'), L('Not now', 'Не зараз')], pick: i => pick(i === 0) });
 
 // A keeper tests you on their area's words; eight of ten wins their pysanka.
+// the keeper's test grows with the place: 10 questions up to 40 words, 15 up to 90, 20 beyond; 80% passes
+const trialSize = z => ZONES[z].length <= 40 ? 10 : ZONES[z].length <= 90 ? 15 : 20;
+const TRIAL_UA = { 10: ['Десять', 'Вісім'], 15: ['П\'ятнадцять', 'Дванадцять'], 20: ['Двадцять', 'Шістнадцять'] };
 function keeperTalk(zone, lines) {
   return (npc, done) => {
     const name = npc.name, b = BADGES[zone], have = zoneCaught(zone), where = AREAS[ZONE_AREA[zone]];
     if (!S.f.book) return say(name, lines, done);
-    const need = trialNeed(zone);
+    const need = trialNeed(zone), size = trialSize(zone), pass = Math.ceil(.8 * size), [sizeUa, passUa] = TRIAL_UA[size];
     if (have < need) return say(name, [...lines, L(`When you know ${need} words from ${where.name}, come back and I'll test you. You know ${have} so far.`,
       `Коли знатимеш ${need} ${sliv(need)} звідси, з місця ${where.ua}, приходь, і я тебе перевірю. Поки що ти знаєш ${have}.`)], done);
     const intro = S.f['b' + zone] ? [L(`You already have my ${b.name}. Want to be tested again anyway? Good for the memory.`, 'Ти вже маєш мою писанку. Хочеш, перевірю ще раз? Це корисно для пам\'яті.')]
       : [L(`You know ${have} words from ${where.name}. Let's see if they stuck.`, `Ти знаєш ${have} ${sliv(have)}. Подивимось, чи вони запам\'яталися.`),
-        L('Ten words. Get eight right and my pysanka is yours.', 'Десять слів. Вісім правильних, і моя писанка твоя.')];
+        L(`${size} words. Get ${pass} right and my pysanka is yours.`, `${sizeUa} слів. ${passUa} правильних, і моя писанка твоя.`)];
     say(name, intro, null, yesNo(go => {
       if (!go) { say(name, [L('Whenever you\'re ready.', 'Коли будеш {{готовий|готова}}.')], done); return; }
-      startTrial(zone, 10, q => {
+      startTrial(zone, size, q => {
         if (q.stopped) { say(name, [L('Stopping already? Come back when you\'re ready.', 'Вже зупиняєшся? Приходь, коли будеш {{готовий|готова}}.')], done); return; }
-        if (q.score >= 8) {
+        const of = q.ids.length;
+        if (q.score >= Math.ceil(.8 * of)) {
           const first = !S.f['b' + zone];
           S.f['b' + zone] = 1; sfx('badge'); renderHud(); saveSoon();
-          say(name, [L(`${q.score} out of 10!`, `${q.score} з 10!`),
+          say(name, [L(`${q.score} out of ${of}!`, `${q.score} з ${of}!`),
             first ? L(`Take this: the ${b.name}. [You received the ${b.name}!]`, `Візьми: це моя писанка. [Ти {{отримав|отримала}} писанку: ${b.name}!]`) : L('Still sharp. Good.', 'Пам\'ять гостра. Добре.'),
             ...(first && badgeCount() === NZ ? [L(`That's all ${NZ}. Now go into the old forest and find Baba Yaga. She'll want to see what you know.`, `Це всі ${NZ}. Тепер іди в старий ліс і знайди Бабу Ягу. Вона захоче побачити, що ти знаєш.`)] : [])], done);
-        } else say(name, [L(`${q.score} out of 10. Not yet.`, `${q.score} з 10. Ще ні.`), L('Catch some more, practise with Ostap, and try me again.', 'Злови ще слів, повправляйся з Остапом і приходь знову.')], done);
+        } else say(name, [L(`${q.score} out of ${of}. Not yet.`, `${q.score} з ${of}. Ще ні.`), L('Catch some more, practice with Ostap, and try me again.', 'Злови ще слів, повправляйся з Остапом і приходь знову.')], done);
       });
     }));
   };
@@ -36,6 +40,8 @@ function ostapTalk(npc, done) {
   if (!S.f.book) {
     return say(name, [
       L(`Ah, ${myName()}, there you are. Sit, sit. Listen.`, `А, ${myVoc()}, ось ти де. Сідай, сідай. Слухай.`),
+      ...(RETURNED ? [L(`You again! I remember you. You sent Baba Yaga packing once already, with the ${RETURNED} words. Well, she's back, and she's taken other words this time.`,
+        `Знову ти! Я тебе пам'ятаю. Ти вже {{прогнав|прогнала}} Бабу Ягу одного разу, словами рівня ${RETURNED}. Ну, вона вернулася, і цього разу забрала інші слова.`)] : []),
       L('Words are like swallows. Leave them alone too long and they fly south.', 'Слова як ластівки. Залишиш їх надовго, і вони полетять на південь.'),
       isA1() ? L(`Ukrainian words are loose in this country, ${N} of them. The easy ones live in the grass round Vyshneve. Harder ones in the wheat of the steppe and the reeds at Kalynivka. The hardest live in the old forest, where Mavka walks and Baba Yaga keeps her hut.`,
         `По цьому краю розбіглися українські слова, і їх ${N}. Легкі живуть у траві біля Вишневого. Важчі в пшениці в степу та в очереті в Калинівці. А найважчі в старому лісі, де ходить Мавка і де стоїть хатинка Баби Яги.`)
@@ -49,13 +55,11 @@ function ostapTalk(npc, done) {
       const first = firstWord();
       openQuiz({ mode: 'wild', ids: [first], done: () => {
         say(name, [
-          caughtCount() ? (isA1() ? L('Good! Сло́во means "word". Only 999 to go.', 'Добре! «Слово» означає word. Залишилось лише 999.')
+          caughtCount() ? (isA1() ? L(`Good! Сло́во means "word". Only ${N - 1} to go.`, `Добре! «Слово» означає word. Залишилось лише ${N - 1}.`)
             : L(`Good! ${WORDS[first][1]} means "${WORDS[first][3]}". Only ${N - 1} to go.`, `Добре! «${plainUa(WORDS[first][1])}» означає ${WORDS[first][3]}. Залишилось лише ${N - 1}.`)) : L('It got away. Never mind, it\'ll be back. They always come back.', 'Утекло. Нічого, воно повернеться. Вони завжди повертаються.'),
-          L('Words you catch will get rusty. When they do, they\'ll turn up again in the grass, or come and practise with me.', 'Слова, які ти зловиш, з часом іржавіють. Тоді вони знову з\'являться в траві. Або приходь до мене повправлятися.'),
-          isA1() ? L('Every place keeps forty words, and a keeper who will test you once you know thirty of them. Nine places are around Vyshneve. Sixteen more are out across Ukraine, from the Sich to the Carpathians to the sea. Baba Hanna, here at the well, is the first keeper.',
-            'Кожне місце береже сорок слів, і там є хранитель, який перевірить тебе, коли знатимеш тридцять із них. Дев\'ять місць довкола Вишневого. Ще шістнадцять — по всій Україні, від Січі до Карпат і до моря. Баба Ганна тут біля криниці — перша.')
-          : L(`Every place keeps about ${perPlace()} words, and a keeper who will test you once you know three quarters of them. Nine places are around Vyshneve. Sixteen more are out across Ukraine, from the Sich to the Carpathians to the sea. Baba Hanna, here at the well, is the first keeper.`,
-            `Кожне місце береже близько ${perPlace()} слів, і там є хранитель, який перевірить тебе, коли знатимеш три чверті з них. Дев\'ять місць довкола Вишневого. Ще шістнадцять — по всій Україні, від Січі до Карпат і до моря. Баба Ганна тут біля криниці — перша.`),
+          L('Words you catch will get rusty. When they do, they\'ll turn up again in the grass, or come and practice with me.', 'Слова, які ти зловиш, з часом іржавіють. Тоді вони знову з\'являться в траві. Або приходь до мене повправлятися.'),
+          L(`Every place keeps its own words, about ${perPlace()} on average, some more and some fewer, and a keeper who will test you once you know three quarters of them. Nine places are around Vyshneve. Sixteen more are out across Ukraine, from the Sich to the Carpathians to the sea. Baba Hanna, here at the well, is the first keeper.`,
+            `Кожне місце береже свої слова, у середньому близько ${perPlace()}, десь більше, десь менше, і там є хранитель, який перевірить тебе, коли знатимеш три чверті з них. Дев\'ять місць довкола Вишневого. Ще шістнадцять — по всій Україні, від Січі до Карпат і до моря. Баба Ганна тут біля криниці — перша.`),
           L('Win every pysanka, and then... well. Then Baba Yaga will want a word with you. Some say she\'s the reason the words ran off in the first place.', 'Здобудеш усі писанки, і тоді... Тоді з тобою захоче поговорити Баба Яга. Кажуть, це через неї слова й розбіглися.'),
           L('Oh, and Kupala night is coming. Oksana by the river will tell you all about it. She tells everybody.', 'А ще наближається ніч на Івана Купала. Оксана біля річки тобі все розкаже. Вона всім розказує.'),
           L('North through the meadow is the forest, south down the road is the steppe, west is the khutir, and over the bridge to the east is Kalynivka. Beyond them, the country goes on. Go on.', 'На північ через луг — ліс, на південь дорогою — степ, на захід — хутір, а через міст на схід — Калинівка. А за ними край тягнеться далі. Іди.'),
@@ -75,7 +79,7 @@ function ostapTalk(npc, done) {
     L(`${c} words caught. A good start. Keep going.`, `${c} слів спіймано. Добрий початок. Продовжуй.`);
   if (!due) return say(name, [report, L('Nothing needs practice right now.' + (nextDueText() ? ` The next word gets rusty in ${nextDueText()}.` : ''), 'Зараз нічого не треба повторювати.'),
     L('Go and catch some more.', 'Іди злови ще.')], done);
-  say(name, [report, L(`${due} ${due === 1 ? 'word is' : 'words are'} getting rusty. Shall we practise?`, `Кілька слів (${due}) почали іржавіти. Повправляємось?`)], null, yesNo(go => {
+  say(name, [report, L(`${due} ${due === 1 ? 'word is' : 'words are'} getting rusty. Shall we practice?`, `Кілька слів (${due}) почали іржавіти. Повправляємось?`)], null, yesNo(go => {
     if (!go) return say(name, [L('They\'ll wait. Not forever, though.', 'Вони почекають. Але не вічно.')], done);
     startLesson(q => say(name, [q.stopped ? L('We\'ll pick it up later.', 'Продовжимо пізніше.')
       : L(`${q.score} of ${q.ids.length}. ${q.score === q.ids.length ? 'Perfect!' : 'The ones you missed will come round again soon.'}`, `${q.score} з ${q.ids.length}. ${q.score === q.ids.length ? 'Чудово!' : 'Ті, що ти {{пропустив|пропустила}}, скоро повернуться.'}`)], done));
@@ -92,16 +96,16 @@ function yagaTalk(npc, done) {
     L(`Come back when you have all ${NZ} pysanky, if you dare. You have ${badgeCount()}.`, `Приходь, коли матимеш усі ${NZ} писанок, якщо наважишся. У тебе ${badgeCount()}.`),
     L('Until then, shoo. The hut doesn\'t like visitors.', 'А поки що киш звідси. Хатинка не любить гостей.')], done);
   say(name, [L(`${NZ} pysanky. So it's true what the magpies say.`, `${NZ} писанок. Отже, сороки правду кажуть.`),
-    L('A word nobody says is nobody\'s word. So I took them. They burn so warm in the pich, little dove, and the hut grows bigger on every one.', 'Слово, якого ніхто не каже, нічиє. Тож я їх забрала. Вони так тепло горять у печі, голубчику, а хатинка росте від кожного.'),
+    L('A word nobody says is nobody\'s word. So I took them. They burn so warm in the pich, little dove, and the hut grows bigger on every one.', 'Слово, якого ніхто не каже, нічиє. Тож я їх забрала. Вони так тепло горять у печі, {{голубчику|голубонько}}, а хатинка росте від кожного.'),
     L('When the last word is forgotten, the hut will walk over the whole country, and it will be quiet. Lovely and quiet.', 'Коли забудуть останнє слово, хатинка піде через увесь край, і стане тихо. Гарно й тихо.'),
     L('Fifteen words. Get thirteen right and the words in my stove go free. Get fewer and... well, the stove is already lit.', 'П\'ятнадцять слів. Тринадцять правильних, і слова з моєї печі вільні. Менше... ну, піч уже розпалена.')], null, yesNo(go => {
     if (!go) return say(name, [L('Scared? Clever. Come back when you\'re ready.', 'Боїшся? Розумно. Приходь, коли будеш {{готовий|готова}}.')], done);
     startTrial(null, 15, q => {
       if (q.stopped || q.score < 13) return say(name, [q.stopped ? L('Running away? Wise.', 'Тікаєш? Мудро.') : L(`${q.score} out of 15. Not enough!`, `${q.score} з 15. Замало!`),
-        L('Go home, practise, come back. I\'ll keep the stove warm.', 'Іди додому, вчися, повертайся. Я тримаю піч теплою.')], done);
+        L('Go home, practice, come back. I\'ll keep the stove warm.', 'Іди додому, вчися, повертайся. Я тримаю піч теплою.')], done);
       S.f.yaga = 1; sfx('badge'); saveSoon();
       say(name, [L(`${q.score} out of 15. No. NO!`, `${q.score} з 15. Ні. НІ!`),
-        L('The stove door bangs open. Words pour out of the chimney like sparks, thousands of them, and fly off over the trees towards the villages.', 'Дверцята печі розчахуються. Слова вилітають із комина, як іскри, тисячі їх, і летять над лісом до сіл.'),
+        L('The stove door bangs open. Words pour out of the chimney like sparks, thousands of them, and fly off over the trees toward the villages.', 'Дверцята печі розчахуються. Слова вилітають із комина, як іскри, тисячі їх, і летять над лісом до сіл.'),
         L('You really did learn them. In my day the heroes just hit things. This is much worse.', 'Ти справді їх {{вивчив|вивчила}}. За моїх часів богатирі просто все били. А це набагато гірше.'),
         L('Go on, then. Tell that old kobzar he can write his duma. But say your words, every day. The moment a house goes quiet, I\'ll be back with my broom.', 'Іди вже. Скажи тому старому кобзареві, що він може писати свою думу. Але кажи свої слова щодня. Щойно якась хата затихне, я повернуся з мітлою.'),
         L('[Baba Yaga gave you a crust of rye bread and a jar of something purple. You have finished the trials. Keep catching: there are still words out there.]',
@@ -271,7 +275,7 @@ const NPCS = {
           pick: i => i === 0 ? keeperTalk(7, [L('Every plant in this marsh has a name and a use. So does every word.', 'Кожна рослина на болоті має назву і користь. І кожне слово теж.')])(npc, done) : i === 1 ? roadTeacher(npc, 7, done, chat) : i === 2 ? yarynaLesson(npc.name, done) : chat() });
       } },
     { id: 'blud1', name: 'A wandering light', ua: 7, kind: 'wisp', tx: 30, ty: 17, wander: 3,
-      talk: [[L('Follow me... follow meee... I know a shortcut...', 'Іди за мною... за мноооою... я знаю коротку дорогу...'), L('(It\'s a блуд. It leads travellers astray. Don\'t follow it.)', '(Це блуд. Він заводить подорожніх у трясовину. Не йди за ним.)')]] },
+      talk: [[L('Follow me... follow meee... I know a shortcut...', 'Іди за мною... за мноооою... я знаю коротку дорогу...'), L('(It\'s a блуд. It leads travelers astray. Don\'t follow it.)', '(Це блуд. Він заводить подорожніх у трясовину. Не йди за ним.)')]] },
     { id: 'blud2', name: 'A wandering light', ua: 7, kind: 'wisp', tx: 9, ty: 20, wander: 3,
       talk: [[L('Hee hee. This way. No, that way. No...', 'Хі-хі. Сюди. Ні, туди. Ні...')]] },
     { id: 'blud3', name: 'A wandering light', ua: 7, kind: 'wisp', tx: 31, ty: 10, wander: 2,
@@ -319,7 +323,7 @@ Object.assign(NPCS, {
     { id: 'khymka', name: 'Pani Khymka', ua: 3, tx: 7, ty: 4, dir: 'down', pal: P_OLENA, mods: ['skirt'],
       talk: [[L('Welcome to the корчма. Борщ, вареники, узвар. What\'ll it be? Nothing? Then sit and listen to the gossip, it\'s free.', 'Ласкаво просимо до корчми. Борщ, вареники, узвар. Що будеш? Нічого? Тоді сідай і слухай плітки, це безкоштовно.')],
         [L('Вареники: dumplings. With cherries, with potato, with cabbage. Never with gossip.', 'Вареники з вишнями, з картоплею, з капустою. Тільки не з плітками.')]] },
-    { id: 'traveller', name: 'A traveller', ua: 5, tx: 3, ty: 4, dir: 'down', pal: { h: '#6a4226', H: '#4a2e18', w: '#c9c0ae', r: '#5a4a3a', x: '#5a4a3a', p: '#4a4a5a', b: '#3a2a22' }, mods: ['hat', 'moustache'],
+    { id: 'traveller', name: 'A traveler', ua: 5, tx: 3, ty: 4, dir: 'down', pal: { h: '#6a4226', H: '#4a2e18', w: '#c9c0ae', r: '#5a4a3a', x: '#5a4a3a', p: '#4a4a5a', b: '#3a2a22' }, mods: ['hat', 'moustache'],
       talk: [[L('I came through the old forest last night. Don\'t laugh. A hut walked across the road in front of my cart. On hen\'s legs.', 'Учора вночі я їхав через старий ліс. Не смійся. Перед моїм возом через дорогу перейшла хата. На курячих ніжках.'),
         L('And from the chimney came a sound like a whole village whispering. Then nothing. I drove here without stopping.', 'А з комина чувся звук, ніби ціле село шепоче. А потім тиша. Я їхав сюди без зупинки.')]] },
   ],
@@ -340,20 +344,29 @@ NPCS.steppe.push({ id: 'otaman', name: 'Otaman Hnat', ua: 7, tx: 24, ty: 17, dir
   mods: ['moustache', 'chub'], talk: otamanTalk });
 
 const INTRO = () => [
-  `Good morning, ${myName()}.`,
-  'Vyshneve. A village of cherry orchards somewhere in the Poltava steppe.',
-  isA1() ? `They say ${N} Ukrainian words live wild in this country: in the grass, in the wheat, in the reeds, in the old forest.`
-    : `They say ${N} Ukrainian words live wild in this country, the ${LEVEL} words this time: in the grass, in the wheat, in the reeds, in the old forest.`,
-  'Ostap the kobzar is waiting for you by the church, north up the road.\n(Arrows walk. Z talks. X runs. T flips a line between English and Ukrainian.)',
+  L(`Good morning, ${myName()}.`, `Доброго ранку, ${myVoc()}.`),
+  L('Vyshneve. A village of cherry orchards somewhere in the Poltava steppe.', 'Вишневе. Село вишневих садків десь у полтавському степу.'),
+  isA1() ? L(`They say ${N} Ukrainian words live wild in this country: in the grass, in the wheat, in the reeds, in the old forest.`,
+    `Кажуть, у цьому краю на волі живе ${N} ${sliv(N)}: у траві, у пшениці, в очереті, у старому лісі.`)
+    : L(`They say ${N} Ukrainian words live wild in this country, the ${LEVEL} words this time: in the grass, in the wheat, in the reeds, in the old forest.`,
+    `Кажуть, у цьому краю на волі живе ${N} ${sliv(N)}, цього разу рівня ${LEVEL}: у траві, у пшениці, в очереті, у старому лісі.`),
+  L('Ostap the kobzar is waiting for you by the church, north up the road.\n(Arrows walk. Z talks. X runs. T flips a line between English and Ukrainian.)',
+    'Кобзар Остап чекає на тебе біля церкви, на північ по дорозі.\n(Стрілки: ходити. Z: говорити. X: бігти. T: перемкнути рядок між англійською та українською.)'),
 ];
 
 // ─── Your name, and the people who know it ────────────────────────────────
 const myName = () => S.name || DEFAULT_NAME_OF();
 // The vocative (кличний відмінок): Ukrainian changes a name when you call someone by it.
 // Андрій → Андрію, Оксана → Оксано, Тарас → Тарасе, Марко → Марку, Олег → Олегу, Галя → Галю.
+// names whose vocative isn't regular: і turns back to о (Яків → Якове), and -ор/-ар names that go soft
+const VOC_EXCEPT = { 'Яків': 'Якове', 'Федір': 'Федоре', 'Антін': 'Антоне', 'Тиміш': 'Тимоше', 'Ничипір': 'Ничипоре', 'Сидір': 'Сидоре',
+  'Ігор': 'Ігорю', 'Лазар': 'Лазарю' };
 function vocative(name) {
   if (!/^[А-ЩЬЮЯҐЄІЇа-щьюяґєії'ʼ’-]+$/.test(name)) return name;
-  const rules = [[/лля$/, 'лле'], [/ія$/, 'іє'], [/([бвгґджзклмнпрстфхцчшщ])я$/, '$1ю'], [/а$/, 'о'], [/ій$/, 'ію'], [/й$/, 'ю'], [/ь$/, 'ю'],
+  if (VOC_EXCEPT[name]) return VOC_EXCEPT[name];
+  // a girl's name ending in a consonant or ь stays as it is (Адель, Рут, Естер); Любов is the one that changes
+  if (S.sex === 'f' && /[бвгґджзклмнпрстфхцчшщь]$/.test(name) && name !== 'Любов') return name;
+  const rules = [[/лля$/, 'лле'], [/ія$/, 'іє'], [/([аеиоуіюєїй])я$/, '$1є'], [/([бвгґджзклмнпрстфхцчшщ])я$/, '$1ю'], [/а$/, 'о'], [/ій$/, 'ію'], [/й$/, 'ю'], [/ь$/, 'ю'],
     [/([кгх])о$/, '$1у'], [/о$/, 'е'], [/([кгх])$/, '$1у'], [/([бвґджзлмнпрстфцчшщ])$/, '$1е']];
   for (const [re, to] of rules) if (re.test(name)) return name.replace(re, to);
   return name;
@@ -370,7 +383,7 @@ const GREET = {
   paraska: (n, v) => L(`${n}, come in, come in. Mind the loom.`, `${v}, заходь, заходь. Обережно, верстат.`),
   andriy: (n, v) => n === 'Андрій' ? L('Hey, we have the same name! Тезко! That\'s what you call someone with your name.', 'Гей, у нас однакові імена! Тезко!')
     : L(`Hi, ${n}.`, `Привіт, ${v}.`),
-  dyak: (n, v) => L(`Слава Ісусу Христу, ${n}. (A church greeting. The answer is "Слава навіки!": glory forever.)`, `Слава Ісусу Христу, ${v}. (Відповідають: «Слава навіки!»)`),
+  dyak: (n, v) => L(`Мир тобі, ${n}. (A churchman's greeting: peace to you. You answer "І тобі мир", and peace to you too.)`, `Мир тобі, ${v}. (Відповідають: «І тобі мир».)`),
   motria: (n, v) => L(`${n}? Come here, let me look at you.`, `${v}? Ходи сюди, дай на тебе подивитися.`),
 };
 function greeting(npc) {

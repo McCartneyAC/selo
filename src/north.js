@@ -3,7 +3,7 @@
 const POLISSIA_NEED = 7;
 Object.assign(ITEMS, {
   sorochka: { ua: 'стара сорочка', en: 'an old linen shirt', desc: 'From Hafiia the weaver. Patched at the elbows, embroidered at the collar. For the scarecrow.' },
-  shtany: { ua: 'старі штани', en: 'old trousers', desc: 'Lukash\'s late father\'s. His mother handed them over as if they were a medal.' },
+  shtany: { ua: 'старі штани', en: 'old pants', desc: 'Lukash\'s late father\'s. His mother handed them over as if they were a medal.' },
   kurtka: { ua: 'стара куртка', en: 'an old jacket', desc: 'From Fedir the fisherman. It smells of smoked eel and always will.' },
   sharf: { ua: 'червоний шарф', en: 'a red scarf', desc: 'From Lukash. Magpies hate red, he says. He may have made that up.' },
   shapka: { ua: 'солом\'яна шапка', en: 'a straw hat', desc: 'Did Prokip\'s. He has worn it to every wedding since 1961.' },
@@ -28,7 +28,7 @@ EXIT_LOCK['forest>bir'] = () => {
 // S.f.opudx: garments you've been given (bits), S.f.opudd: garments it's wearing (bits)
 const CLOTHES = [   // item, bit, the dressing line
   ['sorochka', 1, ['Спершу вдягаємо опудалу ___.', 'First we put the shirt on the scarecrow.', ['сорочку', 'сорочка', 'сорочкою'], 0, 'Вдягати що? The accusative: feminine -а becomes -у. Сорочка → сорочку.']],
-  ['shtany', 2, ['Потім ___, бо в нього мерзнуть ноги.', 'Then the trousers, because its legs are cold.', ['штани', 'штанів', 'штанями'], 0, 'Штани is plural and not alive, so the accusative looks just like the nominative: штани.']],
+  ['shtany', 2, ['Потім ___, бо в нього мерзнуть ноги.', 'Then the pants, because its legs are cold.', ['штани', 'штанів', 'штанями'], 0, 'Штани is plural and not alive, so the accusative looks just like the nominative: штани.']],
   ['kurtka', 4, ['Поверх сорочки вдягаємо ___.', 'Over the shirt we put on the jacket.', ['куртку', 'куртка', 'куртки'], 0, 'Куртка → куртку: feminine -а becomes -у.']],
   ['sharf', 8, ['На шию зав\'язуємо ___.', 'Round its neck we tie the scarf.', ['шарф', 'шарфа', 'шарфом'], 0, 'Masculine things don\'t change in the accusative: шарф → шарф. (Living ones do: бачу кота, бачу Лукаша.)']],
   ['shapka', 16, ['А на голову вдягаємо ___!', 'And on its head we put the hat!', ['шапку', 'шапка', 'шапці'], 0, 'Шапка → шапку. And на голову: на + the accusative, because that\'s where the hat goes.']],
@@ -50,7 +50,7 @@ function kidsTalk(npc, done) {
   say(n, [L('The magpies are eating the flax! Not the seeds: the words. Mama says the flax remembers every song that was sung over it, and the magpies peck the songs out.', 'Сороки їдять льон! Не насіння, а слова. Мама каже, льон пам\'ятає кожну пісню, яку над ним співали, а сороки їх виклювують.'),
     L('We need an опудало. A scarecrow. We\'ve got the sticks. We haven\'t got any clothes for it.', 'Нам треба опудало. Палиці є. Одягу нема.'),
     'Опудалу треба: сорочка, штани, куртка, шарф і шапка. Старий одяг є в тітки Гафії, у мами Лукаша, у дядька Федора, у Лукаша і в діда Прокопа.',
-    L('[They told you in Ukrainian. Ask the neighbours, and take only what the scarecrow needs.]', '[Вони сказали українською. Спитай сусідів і бери тільки те, що потрібно опудалу.]'),
+    L('[They told you in Ukrainian. Ask the neighbors, and take only what the scarecrow needs.]', '[Вони сказали українською. Спитай сусідів і бери тільки те, що потрібно опудалу.]'),
     L('[When you ask for something, it takes the accusative: дай сорочку, дай шапку, дай куртку. Feminine -а becomes -у. Masculine things and plurals stay as they are: дай шарф, дай штани.]', '[Коли просиш щось, кажи у знахідному відмінку: дай сорочку, дай шапку, дай куртку. Жіноче -а стає -у. Чоловічий рід і множина не змінюються: дай шарф, дай штани.]')], done);
 }
 // a neighbour with two old things to give: one is what the scarecrow needs

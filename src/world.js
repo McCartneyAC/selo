@@ -42,7 +42,7 @@ const AREAS = {
     name: 'Kalynivka', ua: 'Калинівка', zone: 3, grass: 'r"', music: 'kalynivka',
     exits: [{ x: 0, y: 12, to: 'vyshneve', tx: 42, ty: 16, dir: 'left' }, { x: 19, y: 0, to: 'lake', tx: 20, ty: 28, dir: 'up' }, { x: 36, y: 29, to: 'ferry', tx: 20, ty: 1, dir: 'down' }],
     houses: {
-      '4,7': 'The Bondarenko house. Somebody inside is practising the bandura. Badly.',
+      '4,7': 'The Bondarenko house. Somebody inside is practicing the bandura. Badly.',
       '10,7': 'The post office, which is also somebody\'s kitchen.',
       '26,7': 'Nobody home. A note on the door says ПОВЕРНУСЯ ЗАВТРА: back tomorrow.',
       '31,14': 'The fisherman\'s house. Nets drying, a smell of river.',
@@ -79,7 +79,7 @@ Object.assign(AREAS, {
     signs: { '21,13': 'БОЛОТО\nThe marsh. Do not follow the lights.' } },
 });
 // ─── The wider country ────────────────────────────────────────────────────
-// Version 2 is a journey across Ukraine: 25 places, each keeping 40 words. Places still being built are `planned`.
+// Version 2 is a journey across Ukraine: 25 places, each keeping a share of the level's words. Places still being built are `planned`.
 const REGIONS = [['Poltava', 'Полтавщина'], ['Zaporizhzhia', 'Запоріжжя'], ['Kyiv', 'Київ'], ['Polissia', 'Полісся'],
   ['The Carpathians', 'Карпати'], ['Podillia', 'Поділля'], ['The Black Sea', 'Причорномор’я'], ['Galicia', 'Галичина']];
 const ABOUT = {
@@ -130,7 +130,7 @@ built('podil', { zone: 11, grass: '",', music: 'kyiv', paved: true,
   houses: { '11,3': 'A bakery. The smell of fresh bubliky comes out of the door and grabs you by the nose.', '16,3': 'A café: кав\'ярня. The door is open.',
     '27,3': 'Flats. Seven doorbells, seven names, one cat on the windowsill.', '32,3': 'A chemist\'s: аптека. Closed for lunch.',
     '11,21': 'A bookshop: книгарня. The door is open.', '16,21': 'The tram depot office. Timetables and a samovar.',
-    '27,21': 'Flats. Mykyta the cabbie lives on the second floor.', '32,21': 'A music school. Somebody is practising scales on the piano, badly but bravely.' },
+    '27,21': 'Flats. Mykyta the cabbie lives on the second floor.', '32,21': 'A music school. Somebody is practicing scales on the piano, badly but bravely.' },
   signs: { '33,9': 'ТРАМВАЙ\nTram stop: Kontraktova Square.', '13,15': 'МАРШРУТКА\nMinibus stop. Route: Podil · Kalynivka · and back.' } });
 AREAS.forest.exits.push(...[11, 12].map(x => ({ x, y: 0, to: 'bir', tx: 20, ty: 32, dir: 'up' })));
 built('bir', { zone: 14, grass: '",f', music: 'bir',
@@ -149,10 +149,10 @@ const MOUNTAIN_G = { g0: '#b4dc84', g1: '#86bc62', g2: '#669e4c', g3: '#487c3e',
 built('synevyr', { zone: 18, grass: '",', music: 'synevyr', houses2: 'hutsulKhata', G: MOUNTAIN_G, hops: [[22, 12]],
   exits: [{ x: 43, y: 14, to: 'verkhovyna', tx: 1, ty: 16, dir: 'right' }],
   houses: { '4,24': 'Baba Palahna\'s house. Ivanka is staying here for the summer. The door is open.', '30,24': 'A forester\'s house. Antlers over the door, and a cat asleep on the antlers.' },
-  signs: { '25,20': 'СИНЕВИР\nLake Synevyr, the sea-eye of the Carpathians. 989 metres up, 24 deep, made of a girl\'s tears.', '24,31': 'АВТОБУС\nTo the railway station, and the night train back to Polissia. Ask Ferents.' } });
+  signs: { '25,20': 'СИНЕВИР\nLake Synevyr, the sea-eye of the Carpathians. 989 meters up, 24 deep, made of a girl\'s tears.', '24,31': 'АВТОБУС\nTo the railway station, and the night train back to Polissia. Ask Ferents.' } });
 built('verkhovyna', { zone: 15, grass: '",', music: 'hutsul', houses2: 'hutsulKhata', church: 'wood', G: MOUNTAIN_G,
   exits: [{ x: 0, y: 16, to: 'synevyr', tx: 42, ty: 14, dir: 'left' }, { x: 22, y: 0, to: 'polonyna', tx: 22, ty: 32, dir: 'up' }],
-  houses: { '6,8': 'Did Yura\'s house. A trembita three metres long lies along the eaves, like a sleeping snake.', '12,19': 'The korchma. Somebody inside is tuning a fiddle, badly. The door is open.',
+  houses: { '6,8': 'Did Yura\'s house. A trembita three meters long lies along the eaves, like a sleeping snake.', '12,19': 'The korchma. Somebody inside is tuning a fiddle, badly. The door is open.',
     '26,8': 'Vasylyna\'s house. A pair of tsymbaly hammers hangs on the door. The door is open.', '21,24': 'The bride\'s house. Rushnyky in every window, and a smell of baking that could knock you over.' },
   signs: { '40,16': 'EAST: over the Cheremosh to Kosiv and Kolomyia.\nThe spring flood took the road. Everybody says it will be mended next year. Everybody said that last year.',
     '2,17': 'ВЕРХОВИНА\nVerkhovyna, the Hutsul capital. WEST: Synevyr. NORTH: the polonyna.', '24,17': 'ҐРАЖДА\nThe wedding is this way. (The wedding is always this way.)' } });
@@ -163,7 +163,7 @@ built('polonyna', { zone: 16, grass: '",', music: 'polonyna', houses2: 'hutsulKh
 built('chornohora', { zone: 17, grass: '",', music: 'chornohora', houses2: 'hutsulKhata', mist: true, G: { g0: '#c4d4a8', g1: '#9cae84', g2: '#82966c', g3: '#647a54', g4: '#3c4e36' },
   exits: [{ x: 0, y: 26, to: 'polonyna', tx: 42, ty: 9, dir: 'left' }],
   houses: { '8,21': 'The molfar\'s hut. Bundles of herbs hang in the doorway, and something hums inside. The door is open.' },
-  signs: { '4,25': 'ЧОРНОГОРА\nChornohora, the black mountains. UP: Pip Ivan, 2028 metres.', '26,10': 'ПІП ІВАН\nThe summit, and the old observatory. Turn back in bad weather. (The weather is always bad.)' } });
+  signs: { '4,25': 'ЧОРНОГОРА\nChornohora, the black mountains. UP: Pip Ivan, 2028 meters.', '26,10': 'ПІП ІВАН\nThe summit, and the old observatory. Turn back in bad weather. (The weather is always bad.)' } });
 built('lavra', { zone: 12, grass: '",', music: 'lavra',
   exits: [{ x: 22, y: 0, to: 'podil', tx: 37, ty: 32, dir: 'up' }],
   houses: { '11,14': 'The monks\' cells. The door is open.' },
@@ -178,7 +178,7 @@ built('kamianets', { zone: 19, grass: '",', music: 'kamianets', G: Object.assign
   exits: [{ x: 43, y: 15, to: 'fair', tx: 1, ty: 16, dir: 'right' }, { x: 27, y: 33, to: 'dniester', tx: 22, ty: 1, dir: 'down' }],
   hops: [[36, 15]],
   houses: {}, look: { '@': 'An old town house of Kamianets: thick walls, a vaulted cellar, and a balcony with geraniums.', '~': 'Far below, the Smotrych runs round the rock like a moat. Nobody built that; the river did.' },
-  signs: { '36,14': 'АВТОСТАНЦІЯ\nThe bus station. Buses to Lviv: ask Pan Roman.', '25,29': 'ФЕСТИВАЛЬ ПОВІТРЯНИХ КУЛЬ\nThe balloon festival. Launch at dawn, weather and colours permitting.',
+  signs: { '36,14': 'АВТОСТАНЦІЯ\nThe bus station. Buses to Lviv: ask Pan Roman.', '25,29': 'ФЕСТИВАЛЬ ПОВІТРЯНИХ КУЛЬ\nThe balloon festival. Launch at dawn, weather and colors permitting.',
     '12,17': 'ЗАМКОВИЙ МІСТ\nThe Castle Bridge. WEST: the fortress. EAST: the old town.', '21,18': 'КАМ\'ЯНЕЦЬ\nKamianets, the town on the rock. Ten centuries, eleven towers, one bridge in. The Turks said only God could take it.' } });
 built('dniester', { zone: 20, grass: '",', music: 'dniester', G: Object.assign({ w: ['#d4efe4', '#8ccab8', '#559e8e', '#3f8072'] }, PODILLIA_G), hops: [[37, 21]],
   exits: [{ x: 22, y: 0, to: 'kamianets', tx: 27, ty: 32, dir: 'up' }, { x: 0, y: 18, to: 'verkhovyna', tx: 8, ty: 32, dir: 'left' }],
@@ -204,20 +204,20 @@ built('vylkove', { zone: 22, grass: '",', music: 'vylkove', houses2: 'vylkoveKha
   houses: { '4,22': 'Did Fedot\'s house. A boat is pulled up by the door like a dog asleep. The door is open.', '3,5': 'A reed-roofed house. A cat is fishing from the doorstep, seriously.',
     '8,5': 'The post office: Пошта. Shut. A note says: «Пішла по воді». Gone by water.', '17,5': 'A house with a garden of tomatoes on a raft.', '23,5': 'A house with blue shutters and a boat for every child.',
     '34,5': 'The Lipovan baker\'s. Smells of bread and kvass.', '3,14': 'A fisherman\'s house. Nets on every fence, and a sturgeon drawn on the door.', '17,14': 'A house painted sky blue, on purpose, so the sky won\'t feel lonely.',
-    '34,14': 'Nastia the postwoman\'s house. Her boat isn\'t here.', '19,22': 'Savva\'s house. Somebody is practising the accordion, and so loudly that he has come outside to do it, by the east wall.', '35,22': 'A house on stilts. When the Danube rises, it doesn\'t mind.' },
+    '34,14': 'Nastia the postwoman\'s house. Her boat isn\'t here.', '19,22': 'Savva\'s house. Somebody is practicing the accordion, and so loudly that he has come outside to do it, by the east wall.', '35,22': 'A house on stilts. When the Danube rises, it doesn\'t mind.' },
   signs: { '17,24': 'ПРИСТАНЬ\nThe pier. The boat for Odesa leaves when the captain finishes his tea.', '39,24': '0 КМ\nKilometre zero. Here the Danube ends, after 2,850 kilometres and ten countries, and goes into the sea.' } });
 // Lviv: the night train from the mountains, or the bus from Kamianets
 built('lviv', { zone: 24, grass: '",', music: 'lviv', paved: true, town: 'lvivTown',
   exits: [], hops: [[20, 27]],
   houses: {}, look: { '@': 'A Lviv house on Rynok square. Every one of the 44 houses round the square is different, and every one of them has a café on the ground floor. That is the law. (It isn\'t the law.)', ']': 'One of the four fountains of Rynok square: Neptune, Diana, Amphitrite, Adonis. This one is Diana, and she looks as if she wants a coffee.' },
-  signs: { '19,26': 'ТРАМВАЙ\nTram to the railway station. Trains to the mountains; buses to Kamianets.', '16,17': 'ПЛОЩА РИНОК\nRynok square, Lviv. The heart of the city since 1356. The ratusha tower: 65 metres, 408 steps.' } });
+  signs: { '19,26': 'ТРАМВАЙ\nTram to the railway station. Trains to the mountains; buses to Kamianets.', '16,17': 'ПЛОЩА РИНОК\nRynok square, Lviv. The heart of the city since 1356. The ratusha tower: 65 meters, 408 steps.' } });
 // St Andrew's Descent: not a place with words of its own, but part of Podil, so Podil's words live in its grass
 AREAS.uzviz = { name: 'Andriyivskyi uzviz', ua: 'Андріївський узвіз', region: 2, zone: 11, grass: '",', music: 'kyiv',
   about: 'The cobbled street that winds from Podil up to St Andrew\'s church. Painters, junk and treasure.',
   exits: [7, 8, 9].map(x => ({ x, y: 33, to: 'podil', tx: 4, ty: 1, dir: 'down' })),
   houses: { '12,22': 'An old house with a carved door. Someone has hung a garland of dried apples and a horseshoe over it.',
     '16,22': 'A gallery. Paintings of the Dnipro, the Lavra, and a great many cats.', '13,13': 'A souvenir shop. Wooden spoons, magnets and very serious nesting dolls.',
-    '17,13': 'A tiny theatre: «Колесо», the Wheel. Tonight: a comedy. Every night: a comedy.', '24,13': 'House No. 13. A cat sits on the step as if it owns the whole street. On the uzviz, it probably does.',
+    '17,13': 'A tiny theater: «Колесо», the Wheel. Tonight: a comedy. Every night: a comedy.', '24,13': 'House No. 13. A cat sits on the step as if it owns the whole street. On the uzviz, it probably does.',
     '3,21': 'The Castle of Richard the Lionheart. It is not a castle, and Richard never came. Kyivans say it is haunted, and the wind in its chimneys howls at night.' },
   signs: { '10,31': 'АНДРІЇВСЬКИЙ УЗВІЗ\nSt Andrew\'s Descent. Up to St Andrew\'s church. Mind the cobbles.', '23,6': 'АНДРІЇВСЬКА ЦЕРКВА\nSt Andrew\'s church. They say the apostle Andrew stood on this hill and blessed the empty hills, and a city grew.' } };
 
@@ -245,7 +245,7 @@ Object.assign(AREAS, {
   lotsman: inside('Kindrat\'s hut', 'Хата лоцмана', 'rapids', 5, 7, 5, 17, 'rapids'),
   cafe: inside('A café', 'Кав\'ярня', 'podil', 5, 7, 18, 6, 'kyiv'),
   bookshop: inside('The bookshop', 'Книгарня', 'podil', 5, 7, 13, 24, 'kyiv'),
-  flat: inside('Mykyta\'s flat', 'Квартира Микити', 'podil', 5, 7, 29, 24, 'kyiv'),
+  flat: inside('Mykyta\'s apartment', 'Квартира Микити', 'podil', 5, 7, 29, 24, 'kyiv'),
   andrewchurch: inside('St Andrew\'s church', 'Андріївська церква', 'uzviz', 6, 9, 20, 6, 'prayer'),
   lavrachurch: inside('The Dormition cathedral', 'Успенський собор', 'lavra', 6, 9, 22, 11, 'prayer'),
   cell: inside('Brother Pimen\'s cell', 'Келія', 'lavra', 4, 6, 13, 17, 'prayer'),
@@ -305,7 +305,7 @@ const LOOK = {
   Z: 'You lower the bucket on the long sweep. The water is cold enough to make your teeth ache.',
   H: 'A haystack. It smells like the whole summer in one place.',
   N: 'The leleka clacks its beak at you.\nKle-ke-ke-ke.',
-  B: 'The hive hums. In the old days you told the bees the family news, so they wouldn\'t take offence and fly away.',
+  B: 'The hive hums. In the old days you told the bees the family news, so they wouldn\'t take offense and fly away.',
   S: 'A sunflower: соняшник. Taller than you, heavy with seeds.',
   m: 'Mallows. Every khata has them by the door.',
   o: 'A fat pumpkin: гарбуз. A girl gives one to a suitor she is turning down. Hence the saying.',
@@ -361,7 +361,7 @@ const LOOK = {
   a: 'A chestnut tree: каштан. In May the whole city lights up with its white candles of flowers.',
   '^': 'A granite rock in the rapids. The water roars round it.',
   y: 'Granite: граніт. The bones of the land come up to the surface here.',
-  l: 'The white wall of the Lavra, a metre thick.',
+  l: 'The white wall of the Lavra, a meter thick.',
   '*': 'White water: the rapids. Nobody swims here. Nobody sensible.',
   t: 'A pine: сосна. Straight as a candle, and it smells of resin and sun.',
   I: 'A bort: a hollow cut high in a living pine for wild bees, closed with a board. Борть. The bortnyk climbs up with a rope.',
@@ -666,9 +666,13 @@ function speaksUA(name) {
   const mode = S.f.lang || 'auto';
   if (mode === 'en') return false;
   if (mode === 'ua') return true;
+  // the telling follows the level: from B1 everyone, narration too, speaks Ukrainian from the first line; at A2 people switch eight pysanky sooner
+  if (LEVEL === 'B1' || LEVEL === 'B2' || LEVEL === 'C1') return true;
   const at = curSpeaker && curSpeaker.name === name ? curSpeaker.ua : SPEAKER_UA[name];
-  return at != null && badgeCount() >= uaAt(at);
+  return at != null && badgeCount() >= uaAt(at) - (LEVEL === 'A2' ? 8 : 0);
 }
+const T_NOTE = L('[At this level everyone speaks to you in Ukrainian. Press T, or tap the T tag, to see any line in English.]',
+  '[На цьому рівні всі говорять з тобою українською. Натисни T або торкнися позначки T, щоб побачити будь-який рядок англійською.]');
 const langTag = document.getElementById('langTag');
 function layoutLine() {
   const ua = dlgLang === 'ua';
@@ -703,6 +707,7 @@ function wrap(text, cols = COLS, lines = LINES) {
 function say(name, list, done, choice) {
   lines = list.length ? list : ['...']; lineI = 0; onClose = done || null; ask = choice || null; askI = 0;
   dlgLang = speaksUA(name) ? 'ua' : 'en';
+  if (dlgLang === 'ua' && (S.f.lang || 'auto') === 'auto' && !isA1() && LEVEL !== 'A2' && !S.f.tNote) { S.f.tNote = 1; saveSoon(); lines = [T_NOTE, ...lines]; }
   layoutLine();
   who.textContent = name || ''; dlg.hidden = false; more.hidden = true; txt.textContent = ''; askEl.hidden = true;
   held.clear(); order.length = 0;
@@ -772,6 +777,10 @@ function actionA() {
 
 function talkTo(npc, release) {
   if (npc.first && npc.first(npc, release)) return;   // a story beat that can't wait behind an errand (src/folk.js)
+  talkOn(npc, release);
+}
+// everything after the story beats: errands first, then the person's own talk
+function talkOn(npc, release) {
   if (errandTalk(npc, release)) return;
   if (typeof npc.talk === 'function') return npc.talk(npc, release);
   const conv = npc.talk[npc.talked % npc.talk.length]; npc.talked++;

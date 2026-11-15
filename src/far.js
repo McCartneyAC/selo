@@ -30,7 +30,7 @@ function vasylTalk(npc, done) {
   const n = npc.name, inKyiv = area === 'podil';
   if (inKyiv) return say(n, [L('Back to Kalynivka? Hop in. Mind the chickens, somebody\'s bringing them to their sister.', 'Назад до Калинівки? Сідай. Обережно з курками, хтось везе їх сестрі.')], null,
     yesNo(go => go ? travel('kalynivka', 14, 12, 'down') : say(n, [L('I leave when the bus is full. Or when I\'m bored.', 'Я їду, коли маршрутка повна. Або коли мені нудно.')], done)));
-  if (!S.f.book) return say(n, [L('Маршрутка: a minibus. Mine goes to Kyiv. Well, it goes towards Kyiv. Mostly it gets there.', 'Маршрутка. Моя їде до Києва. Ну, в бік Києва. Здебільшого доїжджає.')], done);
+  if (!S.f.book) return say(n, [L('Маршрутка: a minibus. Mine goes to Kyiv. Well, it goes toward Kyiv. Mostly it gets there.', 'Маршрутка. Моя їде до Києва. Ну, в бік Києва. Здебільшого доїжджає.')], done);
   if (badgeCount() < KYIV_NEED) return say(n, [L('To Kyiv? In the city they talk fast and they don\'t wait for you. You\'d be lost by the first tram stop.', 'До Києва? У місті говорять швидко й нікого не чекають. Ти загубишся вже на першій зупинці.'),
     L(`Win ${KYIV_NEED} pysanky first. You have ${badgeCount()}.`, `Спершу здобудь ${KYIV_NEED} писанок. У тебе ${badgeCount()}.`)], done);
   say(n, [L('To Kyiv? Sit down, pay later. Next stop: Podil.', 'До Києва? Сідай, заплатиш потім. Наступна зупинка: Поділ.')], null,
@@ -165,7 +165,7 @@ function mykytaCafeTalk(npc, done) {
   const n = npc.name;
   if (!has('letter')) return say(n, [L('Day off. Coffee, a book for my daughter, and nobody saying "taxi".', 'Вихідний. Кава, книжка для доньки, і ніхто не каже «таксі».')], done);
   say(n, [L('You\'re from Vyshneve? You came all this way? How did you even find me? Tell me. Slowly. In Ukrainian, like at home.', 'Ти з Вишневого? Ти {{приїхав|приїхала}} аж сюди? Як ти мене взагалі {{знайшов|знайшла}}? Розкажи. Повільно. Українською, як удома.'),
-    L('[Where you were: де? takes the locative, у книгарні, на стоянці. How you travelled: чим? takes the instrumental, трамваєм, маршруткою.]', '[Де? — місцевий відмінок: у книгарні, на стоянці. Чим? — орудний: трамваєм, маршруткою.]')], () =>
+    L('[Where you were: де? takes the locative, у книгарні, на стоянці. How you traveled: чим? takes the instrumental, трамваєм, маршруткою.]', '[Де? — місцевий відмінок: у книгарні, на стоянці. Чим? — орудний: трамваєм, маршруткою.]')], () =>
     roadQuiz(PODIL_TELL.slice(), 'ПОДІЛ', q => {
       if (q.stopped || q.score < 4) return say(n, [L(`${q.score} of 5. Hold on, you've lost me. Where were you? Tell me again.`, `${q.score} з 5. Стривай, я заплутався. Де ти {{був|була}}? Розкажи ще раз.`)], done);
       take('letter'); S.f.panas = 5; saveSoon(); sfx('ok');
@@ -194,7 +194,7 @@ function clueTalk(step, next, line, fallback) {
 // S.f.pages: one bit per page found in the caves.
 const PAGES = [
   ['Нестор ___ літопис тут, у цих печерах.', 'Nestor wrote the chronicle here, in these caves.', ['писав', 'пише', 'писатиме'], 0, 'The past tense: писати → він писав. He -в, she -ла, it -ло, they -ли.'],
-  ['На Великдень ми завжди ___ писанки.', 'At Easter we always painted pysanky.', ['розписували', 'розписуємо', 'розписуватимемо'], 0, 'We, in the past: -ли. Ми розписували.'],
+  ['У дитинстві на Великдень ми завжди ___ писанки.', 'When we were children, at Easter we always painted pysanky.', ['розписували', 'розписуємо', 'розписуватимемо'], 0, 'We, in the past: -ли. Ми розписували. (Many people say писати писанки: to write them.)'],
   ['Колись на Різдво всі ___ колядки.', 'Long ago, at Christmas, everybody sang carols.', ['співали', 'співають', 'співатимуть'], 0, 'Колись: once, long ago. The past tense: вони співали.'],
   ['Княгиня Ольга ___ в Києві.', 'Princess Olha lived in Kyiv.', ['жила', 'жив', 'живе'], 0, 'She, in the past: -ла. Вона жила. (He: він жив.)'],
   ['Хто не ___ минулого, той не має майбутнього.', 'Whoever doesn\'t remember the past has no future.', ['пам\'ятає', 'пам\'ятав', 'пам\'ятала'], 0, 'A saying is true at any time, so it\'s in the present: пам\'ятає. Пам\'ять: memory.'],
@@ -219,7 +219,7 @@ function pimenTalk(npc, done) {
       S.f.litopys = 3; saveSoon(); sfx('badge');
       return say(n, [L('You found them all? And... Nestor spoke to you?', 'Ти {{знайшов|знайшла}} усі? І... Нестор говорив з тобою?'),
         L('[Pimen lays the pages in the chronicle. One by one the empty lines fill with ink, as if someone is writing them very fast.]', '[Пимен кладе сторінки в літопис. Порожні рядки один за одним наповнюються чорнилом, ніби хтось дуже швидко пише.]'),
-        L('Then I\'ll write this down too: in this year a young traveller from Vyshneve went into the dark and brought back the words.', 'Тоді я запишу й це: цього року {{юний мандрівник|юна мандрівниця}} із Вишневого спустився в темряву і виніс звідти слова.')], done);
+        L('Then I\'ll write this down too: in this year a young traveler from Vyshneve went into the dark and brought back the words.', 'Тоді я запишу й це: цього року {{юний мандрівник|юна мандрівниця}} із Вишневого спустився в темряву і виніс звідти слова.')], done);
     }
     return chat();
   };
@@ -266,7 +266,7 @@ Object.assign(NPCS, {
     { id: 'ivansirko', name: 'Ivan Sirko', ua: 7, tx: 23, ty: 16, dir: 'down', pal: Object.assign({}, P_KOZAK, { h: '#d8d4cc', H: '#a9a49b', r: '#7a1f28', p: '#7a1f28', P: '#4f141a' }), mods: ['moustache', 'chub'], talk: sirkoTalk },
     { id: 'pysar', name: 'Pylyp the pysar', ua: 5, tx: 27, ty: 17, dir: 'left', pal: Object.assign({}, P_KOZAK, { r: '#3a6a3a', p: '#5a4a3a' }), mods: ['moustache', 'chub'], talk: pysarTalk },
     { id: 'holota', name: 'Kozak Holota', ua: 5, tx: 20, ty: 17, dir: 'right', wander: 1, pal: Object.assign({}, P_KOZAK, { w: '#d6c7a8', p: '#8a5a35' }), mods: ['moustache', 'chub'],
-      talk: [[L('Голота: "the poor". I own a sabre, a pipe and a song. Rich!', 'Голота — це бідняк. У мене є шабля, люлька і пісня. Багач!'),
+      talk: [[L('Голота: "the poor". I own a saber, a pipe and a song. Rich!', 'Голота — це бідняк. У мене є шабля, люлька і пісня. Багач!'),
         L('The Sich has one law: nobody asks where you came from. Закон: law. Only where you\'re going.', 'На Січі один закон: ніхто не питає, звідки ти {{прийшов|прийшла}}. Тільки куди йдеш.')],
         [L('Пугу-пугу! That\'s how kozaks call to each other in the steppe, like owls. If somebody answers "козак з лугу", he\'s one of us.', 'Пугу-пугу! Так козаки перекликаються в степу, як сови. Якщо відповідають «козак з лугу», це свій.')]] },
     { id: 'kyrylo', name: 'Kyrylo', ua: 3, tx: 30, ty: 19, dir: 'left', wander: 2, pal: Object.assign({}, P_KOZAK, { h: '#c4762e', H: '#9a5420', r: '#3f6fc4', p: '#c8383a', P: '#8f2430' }),
@@ -274,7 +274,7 @@ Object.assign(NPCS, {
         L('Next year they\'ll shave my head and leave the чуб. Then I\'ll look like a real kozak. Mama will cry.', 'Наступного року мені поголять голову й залишать чуб. Тоді буду як справжній козак. Мама плакатиме.')]] },
     { id: 'sichdog', kind: 'dog', name: 'Sirko\'s dog', tx: 21, ty: 12, dir: 'right', wander: 2,
       talk: (n, done) => say('', [S.f.fern ? L('Woof. I am the otaman\'s dog. He is named after nobody. The dogs of Ukraine are named after HIM.', 'Гав. Я пес отамана. Його ні на чию честь не названо. Це собак в Україні називають на його честь.')
-        : L('A big grey dog. He looks at you as if he\'s heard about you.', 'Великий сірий пес. Дивиться на тебе так, ніби вже про тебе чув.')], done) },
+        : L('A big gray dog. He looks at you as if he\'s heard about you.', 'Великий сірий пес. Дивиться на тебе так, ніби вже про тебе чув.')], done) },
   ],
   kurin: [{ id: 'pavlo', name: 'Pavlo the cook', ua: 5, tx: 5, ty: 6, dir: 'up', pal: Object.assign({}, P_KOZAK, { w: '#efe8d8', r: '#efe8d8', p: '#5a4a3a' }), mods: ['moustache', 'chub'],
     talk: [[L('Куліш! Millet porridge with a bit of fat and a lot of hunger. Breakfast, lunch and supper.', 'Куліш! Пшоно, трошки сала і багато голоду. Сніданок, обід і вечеря.'),
@@ -286,7 +286,7 @@ Object.assign(NPCS, {
     { id: 'kindrat', name: 'Kindrat the lotsman', ua: 5, tx: 12, ty: 12, dir: 'down', pal: { h: '#8a8a8a', H: '#6a6a6a', w: '#e8e2d2', r: '#3f6f95', x: '#3f6f95', p: '#4a4a5a', b: '#3a2a22' }, mods: ['hat', 'moustache'], talk: kindratTalk },
     { id: 'danylko', name: 'Danylko', ua: 1, tx: 18, ty: 8, dir: 'right', pal: { h: '#e8c46a', H: '#c49a3e', w: '#fbf8f0', p: '#6a6a3a', b: '#7a3b22' },
       talk: [[L('Tato is a lotsman. When I\'m big, I\'ll be a lotsman. Tato says first I have to learn to swim. And to listen.', 'Тато — лоцман. Коли виросту, теж буду лоцманом. Тато каже, спершу треба навчитися плавати. І слухати.')],
-        [L('Ліворуч, праворуч, прямо! I practise on the goats. They don\'t listen either.', 'Ліворуч, праворуч, прямо! Я тренуюся на козах. Вони теж не слухають.')]] },
+        [L('Ліворуч, праворуч, прямо! I practice on the goats. They don\'t listen either.', 'Ліворуч, праворуч, прямо! Я тренуюся на козах. Вони теж не слухають.')]] },
   ],
   lotsman: [{ id: 'paraska2', name: 'Teklia', ua: 3, tx: 5, ty: 4, dir: 'down', pal: P_OLENA, mods: ['skirt', 'dots'],
     talk: [[L('Nine rapids, nine names. Кодацький, Сурський, Лоханський, Дзвонецький, Ненаситець, Вовнизький, Будилівський, Лишній, Вільний.', 'Дев\'ять порогів, дев\'ять імен. Кодацький, Сурський, Лоханський, Дзвонецький, Ненаситець, Вовнизький, Будилівський, Лишній, Вільний.'),
@@ -327,7 +327,7 @@ Object.assign(NPCS, {
         L('When the big bell rings, the whole of Kyiv hears it. Lately the magpies sit on it and it rings quieter.', 'Коли дзвонить великий дзвін, його чує весь Київ. Останнім часом на ньому сидять сороки, і він дзвонить тихіше.')]] },
     { id: 'ulyana', name: 'Baba Ulyana', ua: 3, tx: 18, ty: 13, dir: 'right', wander: 1, pal: { h: '#3f6fc4', H: '#2d4f91', w: '#efe8d8', r: C.red, x: C.red, p: '#3a2e3e', b: '#3a2a22' }, mods: ['skirt', 'dots'],
       talk: [[L('I walked here from Poltava. Прочанка: a pilgrim. My knees say it was further than that.', 'Я прийшла сюди пішки з Полтави. Я прочанка. Коліна кажуть, що було далі.'),
-        L('Великдень: Easter. You say «Христос воскрес!» and the answer is «Воістину воскрес!». Practise. Baba Hanna will test you.', 'На Великдень кажуть «Христос воскрес!», а відповідають «Воістину воскрес!». Повправляйся. Баба Ганна перевірить.')]] },
+        L('Великдень: Easter. You say «Христос воскрес!» and the answer is «Воістину воскрес!». Practice. Baba Hanna will test you.', 'На Великдень кажуть «Христос воскрес!», а відповідають «Воістину воскрес!». Повправляйся. Баба Ганна перевірить.')]] },
   ],
   cell: [{ id: 'pimen', name: 'Brother Pimen', ua: 7, tx: 5, ty: 3, dir: 'left', pal: Object.assign({}, P_MONK, { h: '#d8d4cc', H: '#a9a49b' }), mods: ['moustache'], talk: pimenTalk }],
   lavrachurch: [{ id: 'serhiy', name: 'Brother Serhiy', ua: 5, tx: 5, ty: 6, dir: 'up', pal: P_MONK,
@@ -414,8 +414,8 @@ const KALYTA_JOKES = [
   ['Мій кіт живе на ___, бо там сонце.', 'My cat lives on the balcony, because that\'s where the sun is.', ['балконі', 'вокзалі', 'перехресті'], 0, 'балкон: a balcony.'],
   ['Я так довго чекав ___, що став дідом.', 'I waited so long for the tram that I became a grandpa.', ['трамвая', 'ліжка', 'ключа'], 0, 'трамвай: a tram.'],
   ['Наш ___ такий старий, що ним їздив ще князь Володимир.', 'Our bus is so old that Prince Volodymyr rode in it.', ['автобус', 'кухня', 'спальня'], 0, 'автобус: a bus.'],
-  ['Я загубив ___ від квартири. Тепер живу на сходах.', 'I lost the key to my flat. Now I live on the stairs.', ['ключ', 'літак', 'офіс'], 0, 'ключ: a key. (It also means a spring of water.)'],
-  ['Моя теща хропе так, що сусіди думають, що це ___.', 'My mother-in-law snores so loudly the neighbours think it\'s a lorry.', ['вантажівка', 'бібліотека', 'кімната'], 0, 'вантажівка: a lorry, a truck.'],
+  ['Я загубив ___ від квартири. Тепер живу на сходах.', 'I lost the key to my apartment. Now I live on the stairs.', ['ключ', 'літак', 'офіс'], 0, 'ключ: a key. (It also means a spring of water.)'],
+  ['Моя теща хропе так, що сусіди думають, що це ___.', 'My mother-in-law snores so loudly the neighbors think it\'s a truck.', ['вантажівка', 'бібліотека', 'кімната'], 0, 'вантажівка: a truck.'],
   ['У ___ ніхто не говорить, тому я там сплю.', 'Nobody talks in the library, so that\'s where I sleep.', ['бібліотеці', 'аеропорту', 'метро'], 0, 'бібліотека: a library.'],
   ['Таксист Микита знає кожну ___ у Києві, і кожну яму на ній.', 'Mykyta the cabbie knows every street in Kyiv, and every pothole in it.', ['вулицю', 'стелю', 'шину'], 0, 'вулиця: a street.'],
   ['Я купив ___, але не вмію їздити. Тепер ми просто гуляємо разом.', 'I bought a bicycle, but I can\'t ride it. Now we just go for walks together.', ['велосипед', 'готель', 'вокзал'], 0, 'велосипед: a bicycle.'],
@@ -436,14 +436,14 @@ function motronaTalk(npc, done) {
   say(n, [L('Come in, come in! Tonight is Андріївські вечорниці: St Andrew\'s Eve. In the villages it\'s in December. On the uzviz, it\'s whenever I say.', 'Заходь, заходь! Сьогодні Андріївські вечорниці. У селах їх справляють у грудні. На узвозі — коли я скажу.'),
     ...nameDay,
     L('See the kalyta, hanging over the table? A honey loaf. You ride up to it on the poker and bite it. Without laughing.', 'Бачиш калиту над столом? Медовий корж. Під\'їжджаєш до неї верхи на кочерзі й кусаєш. Не сміючись.'),
-    L('Kopystka the pysar will try to make you laugh. If you laugh, he paints a soot moustache on you. Talk to him when you\'re ready.', 'Писар Копистка намагатиметься тебе розсмішити. Засмієшся — намалює тобі сажею вуса. Поговори з ним, коли будеш {{готовий|готова}}.')], done);
+    L('Kopystka the pysar will try to make you laugh. If you laugh, he paints a soot mustache on you. Talk to him when you\'re ready.', 'Писар Копистка намагатиметься тебе розсмішити. Засмієшся — намалює тобі сажею вуса. Поговори з ним, коли будеш {{готовий|готова}}.')], done);
 }
 function kopystkaTalk(npc, done) {
   const n = npc.name, k = S.f.kalyta || 0;
   if (k === 0) return say(n, [L('I\'m the pysar. I write down who laughed. Ask the хазяйка, Pani Motrona, what that means.', 'Я писар. Я записую, хто засміявся. Спитай хазяйку, пані Мотрону, що це означає.')], done);
   const ride = again => roadQuiz(shuffle(KALYTA_JOKES.slice()).slice(0, 6), 'КАЛИТА', q => {
     if (q.stopped) return say(n, [L('Climbing off the poker? Coward. A cheerful coward.', 'Злазиш із кочерги? Боягуз. Веселий боягуз.')], done);
-    if (q.score < 5) return say(n, [L(`${q.score} of 6. You laughed! [Kopystka paints a soot moustache on you, very carefully.]`, `${q.score} з 6. Засміявся! [Копистка дуже старанно малює тобі сажею вуса.]`),
+    if (q.score < 5) return say(n, [L(`${q.score} of 6. You laughed! [Kopystka paints a soot mustache on you, very carefully.]`, `${q.score} з 6. Засміявся! [Копистка дуже старанно малює тобі сажею вуса.]`),
       L('Wash your face and try again. The kalyta isn\'t going anywhere. It\'s tied on.', 'Умийся і спробуй ще. Калита нікуди не дінеться. Вона прив\'язана.')], done);
     if (again) return say(n, [L(`${q.score} of 6, and not even a smile. You\'re no fun at all. Have another bite.`, `${q.score} з 6, і навіть не всміхнувся. З тобою нецікаво. Кусай ще.`)], done);
     S.f.kalyta = 2; saveSoon(); sfx('badge');

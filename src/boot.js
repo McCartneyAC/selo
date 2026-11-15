@@ -8,7 +8,7 @@ function beginGame() {
   renderHud(); dressPlayer();
   const hello = () => {
     if (!S.f.intro) { S.f.intro = 1; say('', INTRO()); saveSoon(); }
-    else if (dueList().length) say('', [`Welcome back, ${myName()}. ${caughtCount()} words in your словник, and ${dueList().length} of them ready to practise.`]);
+    else if (dueList().length) say('', [`Welcome back, ${myName()}. ${caughtCount()} words in your словник, and ${dueList().length} of them ready to practice.`]);
   };
   if (!S.name || !S.sex) askName(hello); else hello();   // saves from before boy/girl ask once
 }
@@ -46,4 +46,4 @@ if (hot && typeof hot.ready === 'function') hot.ready(start); else start((hot &&
 if (location.hash === '#debug') window.__vy = { get S() { return S; }, player, enterArea, openQuiz, openDex, say, beginGame, grade, clipBuffer, playWord, unlockAudio,
   get soundTrouble() { return soundTrouble; }, questText, tick: (n, dt) => { for (let i = 0; i < n; i++) { update(dt || 1 / 60); render(); } },
   get warp() { return warp; }, get talking() { return talking(); }, get overlay() { return overlayOpen(); }, get music() { return music && music.id; }, get musicObj() { return music; },
-  get actx() { return actx; }, arrange, tuneShape, get TUNES() { return TUNES; }, canStand, WORDS, get LEVEL() { return LEVEL; }, get N() { return N; }, get ACTIVE() { return ACTIVE; }, setLevel, switchLevel, trialNeed, lessonWords, LESSONS, inPlay, saveNow, get area() { return area; }, get RUN() { return RUN; }, AREAS, NPCS, MAPS, WORLD, get ZONES() { return ZONES; }, DOORS, ERRANDS, VM, WALKABLE, get Q() { return Q; }, get dlgText() { return txt.textContent; }, get dlgLang() { return dlgLang; } };
+  get actx() { return actx; }, arrange, tuneShape, get TUNES() { return TUNES; }, canStand, WORDS, get LEVEL() { return LEVEL; }, get N() { return N; }, get ACTIVE() { return ACTIVE; }, setLevel, switchLevel, trialNeed, lessonWords, LESSONS, inPlay, saveNow, TALES, ITEMS, vocative, promptGloss, distractors, clashes, get RETURNED() { return RETURNED; }, loadSave, get area() { return area; }, get RUN() { return RUN; }, AREAS, NPCS, MAPS, WORLD, get ZONES() { return ZONES; }, DOORS, ERRANDS, VM, WALKABLE, get Q() { return Q; }, get dlgText() { return txt.textContent; }, get dlgLang() { return dlgLang; } };

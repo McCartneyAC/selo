@@ -44,7 +44,7 @@ const W_ = ua => WORDS.findIndex(w => w[0].split(/\s*[=,]\s*/).includes(ua));
 function questText() {
   const f = S.f;
   if (!f.book) return 'Find Ostap the kobzar by the church in Vyshneve.';
-  const others = dumaText() + farText() + northText() + mountainText() + podilliaText() + seaText() + lvivText();
+  const others = dumaText() + farText() + northText() + mountainText() + podilliaText() + seaText() + lvivText() + taleText();
   if (f.night) return (!f.chu ? 'It\'s Kupala night! Go into the old forest and find the chuhaister on the western path.'
     : !f.fern ? 'The chuhaister has let you pass. Find the fern flower in the clearing beyond him.' : 'Go home to Vyshneve. Dawn is coming.');
   return kupalaText() + ` You know ${caughtCount()} of ${N} words, and you have ${badgeCount()} of ${NZ} pysanky.` + others
@@ -72,7 +72,7 @@ function oksanaTalk(npc, done) {
   if (!f.q1) {
     f.q1 = 1; saveSoon();
     return say(n, [
-      L('Kupala night is coming. Івана Купала: the shortest night of the year. We jump over the fire and float our wreaths down the river.', 'Скоро ніч на Івана Купала, найкоротша ніч року. Ми стрибаємо через вогонь і пускаємо вінки по річці.'),
+      L('Kupala night is coming. Івана Купала: Midsummer night. We jump over the fire and float our wreaths down the river.', 'Скоро ніч на Івана Купала, купальська ніч, серед літа. Ми стрибаємо через вогонь і пускаємо вінки по річці.'),
       L('But I have no wreath. Last year mine got caught on Taras\'s line, and then the river took it.', 'Але в мене немає вінка. Торік він зачепився за вудку Тараса, а потім його забрала річка.'),
       L('And they say that on Kupala night the fern flower blooms, deep in the old forest. Whoever finds it can understand the animals. Nobody has found it in a hundred years.', 'А ще кажуть, що на Купала в старому лісі цвіте папороть. Хто знайде цвіт, той розумітиме мову тварин. Його ніхто не знаходив уже сто років.'),
       L('Ask Baba Hanna at the well. She knows all the old stories.', 'Спитай бабу Ганну біля криниці. Вона знає всі старі історії.')], done);
@@ -92,6 +92,11 @@ function oksanaTalk(npc, done) {
 }
 
 function hannaTalk(npc, done) {
+  if (RETURNED && S.f.book && !S.f.hannaBack) {
+    S.f.hannaBack = 1; saveSoon();
+    return say(npc.name, [L('Sonechko! Back again? The whole village still talks about the day the words came home out of Baba Yaga\'s chimney.', 'Сонечко! Знову до нас? Усе село досі згадує той день, коли слова повернулися додому з комина Баби Яги.'),
+      L('She\'s at it again, mind. Different words, harder ones. Well, you know the way to the forest.', 'Але вона знову за своє. Інші слова, важчі. Ну, дорогу до лісу ти знаєш.')], done);
+  }
   const f = S.f;
   if (f.q1 && !f.q2) {
     f.q2 = 1; saveSoon();
@@ -100,7 +105,7 @@ function hannaTalk(npc, done) {
       L('The domovyk of the Hrytsenko house. The Hrytsenkos went to the city, but a domovyk never leaves his stove.', 'Домовика з хати Гриценків. Гриценки поїхали до міста, а домовик ніколи не покидає своєї печі.'),
       L('He won\'t talk to just anyone. Take him bread. Leave it by the pich. Then be polite.', 'Він не з кожним говорить. Віднеси йому хліба. Залиш біля печі. І будь чемним.')], done);
   }
-  if (S.f.book && badgeCount() >= 1 && !has('mapa')) return say(npc.name, [L('Wait, sonechko. Your tato left this with me last time his lorry came through. His old road map. He said you\'d want it when you started going places.', 'Стривай, сонечко. Твій тато залишив мені це, коли востаннє проїжджав. Його стара карта доріг. Казав, що тобі знадобиться, коли почнеш мандрувати.'),
+  if (S.f.book && badgeCount() >= 1 && !has('mapa')) return say(npc.name, [L('Wait, sonechko. Your tato left this with me last time his truck came through. His old road map. He said you\'d want it when you started going places.', 'Стривай, сонечко. Твій тато залишив мені це, коли востаннє проїжджав. Його стара карта доріг. Казав, що тобі знадобиться, коли почнеш мандрувати.'),
     L('Look, he\'s marked it all in pencil: where the ferry goes, where the buses go, the night train to the mountains. That man has driven every road in Ukraine.', 'Дивись, він усе позначив олівцем: куди йде пором, куди автобуси, нічний потяг у гори. Цей чоловік проїхав кожну дорогу в Україні.'),
     give('mapa'), L('[Open the словник (C) and look at the КРАЙ page: the map shows where you are, and how to get anywhere.]', '[Відкрий словник (C), сторінку КРАЙ: на карті видно, де ти, і як дістатися будь-куди.]')], done);
   return keeperTalk(0, [L('The zhuravel creaks, but it has never once dropped a bucket. Forty years I\'ve drawn water here. Вода: water.', 'Журавель скрипить, але жодного разу не впустив відра. Сорок років я тут набираю воду.'),
@@ -109,10 +114,10 @@ function hannaTalk(npc, done) {
 
 const HOUSE_WORDS = () => lessonWords('domovyk', ['хата', 'дім', 'стіл', 'вікно', 'двері', 'ліжко', 'хліб', 'ключ']);
 function domovykTalk(npc, done) {
-  const lines = S.f.kupala ? [L('Kupala came and went, and the house is still standing. Good.', 'Купала минув, а хата стоїть. Добре.'), L('Come and practise house words with me whenever you like.', 'Приходь повторювати слова хати, коли захочеш.')]
+  const lines = S.f.kupala ? [L('Kupala came and went, and the house is still standing. Good.', 'Купала минув, а хата стоїть. Добре.'), L('Come and practice house words with me whenever you like.', 'Приходь повторювати слова хати, коли захочеш.')]
     : [L('Three things open the chuhaister\'s path on Kupala night: a wreath that has been in the water, a candle that has burned in church, and someone who knows the words of the house.', 'Три речі відкривають стежку чугайстра на Купала: вінок, що побував у воді, свічка, що горіла в церкві, і той, хто знає слова хати.'),
       L('You know the words now. Go and find the other two.', 'Слова ти вже знаєш. Іди шукай решту.')];
-  say(npc.name, lines, null, { options: [L('Practise house words', 'Повторити слова хати'), L('Thank you', 'Дякую')], pick: i => {
+  say(npc.name, lines, null, { options: [L('Practice house words', 'Повторити слова хати'), L('Thank you', 'Дякую')], pick: i => {
     if (i) return done();
     teach('The domovyk', HOUSE_WORDS(), () => done());
   } });
@@ -146,7 +151,8 @@ function vodyanykTalk(npc, done) {
 function chuTalk(npc, done) {
   const n = npc.name;
   if (!S.f.night) return say(n, [L('HO! I am the чугайстер! I chase mavkas and dance till dawn.', 'ГО! Я чугайстер! Ганяю мавок і танцюю до світанку.'),
-    L('The flower beyond me? It sleeps. Come back on Kupala night, little one. Then we\'ll see if you can dance.', 'Квітка за мною? Вона спить. Приходь на Купала, малий. Тоді побачимо, чи вмієш ти танцювати.')], done);
+    L('Not here, mind. At home, in the Carpathians. I came down from the mountains for your Kupala dancing. Your mavka can sleep easy in her willow: I\'m on vacation.', 'Тільки не тут. Удома, в Карпатах. Я спустився з гір на ваші купальські танці. Ваша мавка може спокійно спати у вербі: я у відпустці.'),
+    L('The flower beyond me? It sleeps. Come back on Kupala night, little one. Then we\'ll see if you can dance.', 'Квітка за мною? Вона спить. Приходь на Купала, {{малий|мала}}. Тоді побачимо, чи вмієш ти танцювати.')], done);
   npc.dancing = true;
   say(n, [L('HO-HO! Kupala night! The flower is waking!', 'ГО-ГО! Купальська ніч! Квітка прокидається!'),
     L('Nobody passes the chuhaister without dancing. My dance is words: the words of the night. Five of them. Get three.', 'Ніхто не пройде повз чугайстра без танцю. Мій танець — це слова ночі. П\'ять слів. Треба три.')], null, yesNo(go => {
@@ -174,7 +180,7 @@ function polyovykTalk(npc, done) {
   const n = npc.name;
   const words = lessonWords('polyovyk', ['трава', 'земля', 'вітер', 'сонце', 'корова', 'кінь']);
   if (has('ear')) return say(n, [L('The wheat is high. Go on, I\'ll be here till harvest.', 'Пшениця висока. Іди, я тут до жнив.')], null,
-    { options: [L('Practise field words', 'Повторити слова поля'), L('Goodbye', 'До побачення')], pick: i => i ? done() : teach('The polyovyk', words, () => done(), 1) });
+    { options: [L('Practice field words', 'Повторити слова поля'), L('Goodbye', 'До побачення')], pick: i => i ? done() : teach('The polyovyk', words, () => done(), 1) });
   say(n, [L('Shh! I am the польовик, the field\'s own spirit. At noon I walk in the wheat and count the ears.', 'Тсс! Я польовик, дух поля. Опівдні я ходжу пшеницею і рахую колоски.'),
     L('You can see me? Then learn the field\'s words. Get four of six and I\'ll give you something.', 'Ти мене бачиш? Тоді вивчи слова поля. Чотири з шести, і я тобі дещо дам.')], null, yesNo(go => {
     if (!go) return say(n, [L('Then mind where you step.', 'Тоді дивись під ноги.')], done);
@@ -273,7 +279,7 @@ const ERRANDS = [
   { id: 'thread', giver: 'paraska', source: 'olena', item: 'thread', words: ['червоний', 'білий', 'чорний', 'синій', 'зелений'],
     ask: L('I\'ve run out of red thread, right in the middle of the tree of life. Olena sells it at the Kalynivka market. Would you go?', 'У мене закінчилися червоні нитки, просто посеред дерева життя. Олена продає їх на ринку в Калинівці. Сходиш?'),
     hand: L('Red thread for Baba Paraska? Free. She embroidered my wedding towel.', 'Червоні нитки для баби Параски? Безкоштовно. Вона вишила мені весільний рушник.'),
-    thanks: L('Red thread! Now, every colour on a rushnyk has a name. Learn them.', 'Червоні нитки! Кожен колір на рушнику має назву. Вивчи їх.') },
+    thanks: L('Red thread! Now, every color on a rushnyk has a name. Learn them.', 'Червоні нитки! Кожен колір на рушнику має назву. Вивчи їх.') },
   { id: 'salt', giver: 'halyna', source: 'ivan', item: 'salt', words: ['дорога', 'далеко', 'близько', 'хліб'],
     ask: L('It\'s pickling time and I\'m out of salt. Ivan the chumak is on the steppe road, back from Crimea. Would you get me a bag?', 'Час солити огірки, а в мене немає солі. Чумак Іван на степовій дорозі, щойно з Криму. Принесеш мені торбинку?'),
     hand: L('Salt for Halyna? Here. Crimean salt, the best there is. I walked a long road for it.', 'Сіль для Галини? Тримай. Кримська сіль, найкраща. Я за нею далеку дорогу пройшов.'),
@@ -291,7 +297,7 @@ const ERRANDS = [
     hand: L('For Hanna\'s knees? St John\'s wort and chamomile. Tell her to keep them warm.', 'Для Ганниних колін? Звіробій і ромашка. Скажи, щоб тримала їх у теплі.'),
     thanks: L('Herbs! My knees thank you. Here are the words for when something hurts.', 'Трави! Мої коліна тобі дякують. Ось слова на той випадок, коли щось болить.') },
   { id: 'sleeve', giver: 'chort', source: 'sirko', item: 'sleeve', words: ['шукати', 'знайти', 'загубити', 'сміятися'],
-    ask: L('Psst. Every year I lose my red svytka at this fair, and every year I have to find it piece by piece. This year a dog ran off with the sleeve. A grey dog. From a khutir.', 'Псст. Щороку я гублю на цьому ярмарку свою червону свитку і щороку збираю її по шматочку. Цього року рукав забрав собака. Сірий. З хутора.'),
+    ask: L('Psst. Every year I lose my red svytka at this fair, and every year I have to find it piece by piece. This year a dog ran off with the sleeve. A gray dog. From a khutir.', 'Псст. Щороку я гублю на цьому ярмарку свою червону свитку і щороку збираю її по шматочку. Цього року рукав забрав собака. Сірий. З хутора.'),
     hand: L('Woof! (Sirko drops a red sleeve at your feet. It smells of sulphur.)', 'Гав! (Сірко кладе біля твоїх ніг червоний рукав. Він пахне сіркою.)'),
     thanks: L('My sleeve! Hee hee. For that I\'ll teach you some words. Devilishly useful ones.', 'Мій рукав! Хі-хі. За це я навчу тебе кількох слів. Чортівськи корисних.') },
 ];
@@ -395,7 +401,7 @@ const VM = [
   items: [
     ['Оксани немає вдома: вона ___ до баби Ганни.', 'Oksana isn\'t home: she\'s gone to Baba Hanna\'s.', ['пішла', 'прийшла', 'вийшла'], 0, 'Set off and still away: піти.'],
     ['Нарешті ти ___! Ми чекали.', 'You\'ve finally come! We were waiting.', ['прийшов', 'пішов', 'вийшов'], 0, 'Arrived here: прийти.'],
-    ['Завтра зранку ми ___ до Калинівки, а ввечері повернемося.', 'Tomorrow morning we\'ll set off for Kalynivka, and come back in the evening.', ['поїдемо', 'приїдемо', 'виїдемо'], 0, 'Setting off, by cart: поїхати.'],
+    ['Завтра зранку ми ___ до Калинівки, а ввечері повернемося.', 'Tomorrow morning we\'ll set off for Kalynivka, and come back in the evening.', ['поїдемо', 'приїдемо', 'їздимо'], 0, 'Setting off, by cart: поїхати. (Приїдемо would be arriving, and їздимо is going there regularly.)'],
     ['Іван ___ додому з Криму вчора ввечері, і всі його зустрічали.', 'Ivan got home from Crimea last night, and everyone came to meet him.', ['приїхав', 'поїхав', 'виїхав'], 0, 'Arrived: приїхати.'],
     ['Петрик ___ з хати і побіг до річки.', 'Petryk came out of the house and ran to the river.', ['вийшов', 'увійшов', 'прийшов'], 0, 'ви- = out of.'],
     ['Ми ___ до церкви й запалили свічку.', 'We went into the church and lit a candle.', ['увійшли', 'вийшли', 'перейшли'], 0, 'у-/в- = into.'],
@@ -421,7 +427,7 @@ const VM = [
   ] },
   { title: L('On the water', 'На воді'), teacher: 'semen', intro: [
     L('On the water it\'s плисти and плавати, with all the same prefixes: підплисти (come up to), відплисти (pull away), переплисти (across), приплисти (arrive), виплисти (out of).', 'На воді — плисти і плавати, з тими самими префіксами: підплисти, відплисти, переплисти, приплисти, виплисти.'),
-    L('And the ferryman\'s favourite: перевозити / перевезти, to carry across.', 'І улюблене слово перевізника: перевозити / перевезти.')],
+    L('And the ferryman\'s favorite: перевозити / перевезти, to carry across.', 'І улюблене слово перевізника: перевозити / перевезти.')],
   items: [
     ['Щодня Семен ___ людей через Дніпро.', 'Every day Semen ferries people across the Dnipro.', ['перевозить', 'перевезе', 'привозить'], 0, 'Every day: imperfective перевозити.'],
     ['Учора Семен ___ через Дніпро цілий віз солі.', 'Yesterday Semen ferried a whole cart of salt across the Dnipro.', ['перевіз', 'вивіз', 'завіз'], 0, 'пере- = across.'],
@@ -443,7 +449,7 @@ const VM = [
     ['Чумаки ___ на ярмарок сіль і рибу.', 'The chumaks brought salt and fish to the fair.', ['привезли', 'вивезли', 'перевезли'], 0, 'By cart, arriving here: привезти.'],
     ['Вакула ___ коня до кузні.', 'Vakula led the horse into the forge.', ['завів', 'вивів', 'перевів'], 0, 'за- with вести = lead in.'],
     ['Учителька ___ дітей на подвір\'я гратися.', 'The teacher led the children out into the yard to play.', ['вивела', 'привела', 'завела'], 0, 'ви- = out of.'],
-    ['___ сміття з хати!', 'Take the rubbish out of the house!', ['Винеси', 'Принеси', 'Занеси'], 0, 'ви- = out of.'],
+    ['___ сміття з хати!', 'Take the trash out of the house!', ['Винеси', 'Принеси', 'Занеси'], 0, 'ви- = out of.'],
     ['Хто ___ сюди цього козла?', 'Who brought this goat here?', ['привів', 'вивів', 'відвів'], 0, 'Leading someone here: привести.'],
     ['Солопій ___ пшеницю на ярмарок продавати.', 'Solopiy brought his wheat to the fair to sell.', ['привіз', 'вивіз', 'відвіз'], 0, 'By cart, arriving here: привезти.'],
     ['Батько ___ сина до лікаря.', 'The father drove his son to the doctor.', ['відвіз', 'вивіз', 'перевіз'], 0, 'By cart, to somewhere else: відвезти.'],
@@ -539,7 +545,7 @@ function mamaiTalk(npc, done) {
     S.f.duma = 4; saveSoon(); sfx('badge');
     return say(n, [L('You spoke with Hnat? With my otaman? What did he say?', 'Ти {{говорив|говорила}} з Гнатом? З моїм отаманом? Що він сказав?'),
       L('"Saddle the horse." Ha! So the old wolf hasn\'t changed.', '«Сідлай коня». Ха! Старий вовк не змінився.'),
-      L('And Baba Yaga is behind it all. Of course she is. Then this is a war, of a kind. Not with sabres. With words.', 'І за всім стоїть Баба Яга. Звісно. Тоді це війна, своєрідна. Не шаблями. Словами.'),
+      L('And Baba Yaga is behind it all. Of course she is. Then this is a war, of a kind. Not with sabers. With words.', 'І за всім стоїть Баба Яга. Звісно. Тоді це війна, своєрідна. Не шаблями. Словами.'),
       L('A kozak can\'t ride to that war. But you can. Take this horseshoe. Whistle at any signpost and Hnidko will come for you, and carry you anywhere you\'ve been.', 'Козак на таку війну не поїде. А ти можеш. Візьми підкову. Свисни біля будь-якого дороговказу, і Гнідко прийде по тебе й повезе куди завгодно, де ти вже {{був|була}}.'),
       give('horseshoe')], done);
   }
@@ -580,7 +586,7 @@ function babaTalk() {
   const lesson = (after) => roadQuiz(shuffle(VOC.slice()).slice(0, 8), 'КЛИЧНИЙ', after, ['КЛИЧНИЙ ВІДМІНОК', 'Кам\'яна баба', 'the vocative case', 'How do you call them?']);
   if (d >= 2) {
     say(n, [d >= 4 ? L('Stone remembers. So do you, now.', 'Камінь пам\'ятає. І ти тепер теж.') : L('He is listening. Go round to the foot of the kurhan.', 'Він слухає. Обійди курган до підніжжя.')], null,
-      { options: [L('Practise calling', 'Повторити кличний'), L('Goodbye', 'До побачення')], pick: i => i ? null : lesson(() => say(n, [L('...', '...')])) });
+      { options: [L('Practice calling', 'Повторити кличний'), L('Goodbye', 'До побачення')], pick: i => i ? null : lesson(() => say(n, [L('...', '...')])) });
     return true;
   }
   say(n, [L('The stone is warm. Then, very slowly, it speaks.', 'Камінь теплий. А тоді, дуже повільно, він заговорює.'),
@@ -604,12 +610,12 @@ function otamanTalk(npc, done) {
   const n = npc.name, d = S.f.duma || 0;
   if (d >= 3) return say(n, [d >= 4 ? L('Sleep comes easier now. Say the words for me, {{little kozak|little kozachka}}. Say them every day.', 'Тепер спиться легше. Кажи слова за мене, {{козаченьку|козачко}}. Кажи їх щодня.')
     : L('Tell Mamai: saddle the horse.', 'Скажи Мамаєві: сідлай коня.')], null,
-    { options: [L('Practise words of memory', 'Повторити слова пам\'яті'), L('Goodbye', 'Прощавайте')], pick: i => i ? done() : teach(n, MEMORY_WORDS(), () => done()) });
+    { options: [L('Practice words of memory', 'Повторити слова пам\'яті'), L('Goodbye', 'Прощавайте')], pick: i => i ? done() : teach(n, MEMORY_WORDS(), () => done()) });
   say(n, [L('Who calls me with the old words? ...That pipe. Mamai! The old goat is still sitting under his oak, then.', 'Хто кличе мене старими словами? ...Ця люлька. Мамай! Старий цап і досі сидить під своїм дубом.'),
     L('You want to know why the dead can\'t sleep. Listen. The dead live in the words the living say about them. Дід. Батько. Брат. Every time a word is forgotten, one of us goes dark.', 'Ти хочеш знати, чому мертві не сплять. Слухай. Мертві живуть у словах, які про них кажуть живі. Дід. Батько. Брат. Щоразу, як забувають слово, хтось із нас гасне.'),
     L('And somebody is making sure they are forgotten. In the old forest lives a woman with a bone leg. Every word that nobody says, she sweeps up and feeds to her stove, and her hut grows fat on them.', 'А хтось дбає, щоб їх забували. У старому лісі живе жінка з кістяною ногою. Кожне слово, якого ніхто не каже, вона вимітає і кидає в піч, і її хатинка від них гладшає.'),
     L('Baba Yaga. I fought Turks and Poles and once, a bear. I never fought anything that frightened me like a quiet village.', 'Баба Яга. Я бився з турками, з ляхами, а раз — із ведмедем. Але ніщо не лякало мене так, як тихе село.'),
-    L('You can\'t fight her with a sabre. You fight her by remembering. Learn these words. Words of memory. Then she can\'t have them.', 'Шаблею її не переможеш. Її перемагають пам\'яттю. Вивчи ці слова. Слова пам\'яті. Тоді вони їй не дістануться.')],
+    L('You can\'t fight her with a saber. You fight her by remembering. Learn these words. Words of memory. Then she can\'t have them.', 'Шаблею її не переможеш. Її перемагають пам\'яттю. Вивчи ці слова. Слова пам\'яті. Тоді вони їй не дістануться.')],
   () => teach(n, MEMORY_WORDS(), () => {
     take('pipe'); S.f.duma = 3; saveSoon(); sfx('badge');
     say(n, [L('Good. Give Mamai back his pipe... no, I\'ll keep it. He owes me one. Tell him this: saddle the horse.', 'Добре. Віддай Мамаєві люльку... ні, залишу собі. Він мені винен. А йому скажи: сідлай коня.'),
@@ -712,7 +718,7 @@ const STORY_LOOK = {
   },
   'ferryman:4': () => { say('', [L('Semen\'s ledger. Hundreds of names in a careful hand. One page has been torn out, and the edge is scorched.', 'Книга Семена. Сотні імен, акуратним почерком. Одну сторінку вирвано, і край обпалений.')]); return true; },
   'panas:4': () => { say('', [L('A box of fish hooks, and a letter from Panas\'s son in Kyiv, read so many times it has gone soft as cloth.', 'Коробка гачків і лист від Панасового сина з Києва, перечитаний стільки разів, що став м\'який, як полотно.')]); return true; },
-  'yaryna:q': () => { say('', [L('Bundles of herbs, each labelled in Yaryna\'s hand. ВІД ЗУБНОГО БОЛЮ: for toothache. ВІД ПРИСТРІТУ: against the evil eye.', 'В\'язки трав, кожна підписана Ярининою рукою. ВІД ЗУБНОГО БОЛЮ. ВІД ПРИСТРІТУ.'),
+  'yaryna:q': () => { say('', [L('Bundles of herbs, each labeled in Yaryna\'s hand. ВІД ЗУБНОГО БОЛЮ: for toothache. ВІД ПРИСТРІТУ: against the evil eye.', 'В\'язки трав, кожна підписана Ярининою рукою. ВІД ЗУБНОГО БОЛЮ. ВІД ПРИСТРІТУ.'),
     L('And one big bundle of wormwood, полин, tied with red thread: ВІД КІСТЯНОЇ НОГИ. Against the bone leg.', 'І великий жмут полину, перев\'язаний червоною ниткою: ВІД КІСТЯНОЇ НОГИ.')]); return true; },
   '*:B': () => {
     if (!S.f.fern) return false;
