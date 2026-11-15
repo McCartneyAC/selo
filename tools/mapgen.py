@@ -762,7 +762,7 @@ def synevyr():
     m.border(rnd)
     meadow(m, rnd, 2, 2, 41, 31, .4, '"",')
     m.ellipse(22, 12, 11, 7, '~', jitter=.15, rnd=rnd)
-    m.ellipse(22, 11, 2.6, 1.6, '.')                 # the island, where Syn lies
+    m.ellipse(22, 11, 2.6, 1.6, '.')                 # the island, where Vyr lies
     spruces(m, rnd, .35)
     for (cx, cy, rx, ry) in [(22, 12, 13.5, 9), (8, 26, 6, 4), (31, 26, 5, 3.5), (22, 28, 5, 5)]:
         m.ellipse(cx, cy, rx, ry, '.', only='s', jitter=.3, rnd=rnd)
@@ -770,7 +770,7 @@ def synevyr():
     m.ellipse(22, 11, 2.6, 1.6, '.')
     road(m, [(22, 30), (22, 20)]); road(m, [(22, 21), (36, 21)]); road(m, [(36, 21), (36, 14)]); road(m, [(36, 14), (43, 14)])   # (the south road ends at Ferents's bus stop)
     road(m, [(22, 27), (8, 27)])
-    put(21, 18, 'z')                                  # Syn's raft at the shore
+    put(21, 18, 'z')                                  # Vyr's raft at the shore
     put(21, 13, 'z')                                  # and a second one moored at the island, to come back on
     for (x, y) in [(20, 10), (24, 10), (20, 12), (24, 12)]: put(x, y, '~')   # round the island off
     put(23, 10, 's'); put(21, 10, 'y')                # a spruce, and the stone

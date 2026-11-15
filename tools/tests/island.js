@@ -1,4 +1,4 @@
-// Syn's island: row over, then get back off by the raft moored there
+// Vyr's island: row over, then get back off by the raft moored there
 const wait = n => { for (let i = 0; i < (n || 40); i++) tick(1); };
 const at = (x, y, dir) => { Object.assign(v().player, { tx: x, ty: y, x: x * 16, y: y * 16, dir, moving: false }); key('z'); tick(1); };
 start(); badges(9);

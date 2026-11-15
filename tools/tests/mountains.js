@@ -11,12 +11,12 @@ meet('ivanka'); talk(); log('hutsul', v().S.f.hutsul, 'heard', Object.keys(v().S
 meet('mytro'); talk([0]); quiz(3); talk(); log('hutsul after 5/8:', v().S.f.hutsul);
 meet('mytro'); talk([0]); quiz(); talk(); log('hutsul:', v().S.f.hutsul);
 // Syn and Vyr
-meet('vyr'); talk(); log('synvyr', v().S.f.synvyr);
+meet('syn'); talk(); log('synvyr', v().S.f.synvyr);
 at(22, 20, 'up'); talk([0]); wait(); talk(); log('on the island?', v().player.tx, v().player.ty);
-meet('syn'); talk([1]); quiz(); talk(); log('synvyr', v().S.f.synvyr);
-meet('syn'); talk([2]); wait(); log('rowed back to', v().player.tx, v().player.ty);
-meet('vyr'); talk(); quiz(); talk(); log('synvyr', v().S.f.synvyr);
-at(22, 20, 'up'); talk([0]); wait(); talk(); log('synvyr', v().S.f.synvyr, 'sloza', !!v().S.items.sloza, 'vyr on the island:', v().WORLD.synevyr.ents.some(e => e.id === 'vyr2' && e.when()));
+meet('vyr'); talk([1]); quiz(); talk(); log('synvyr', v().S.f.synvyr);
+meet('vyr'); talk([2]); wait(); log('rowed back to', v().player.tx, v().player.ty);
+meet('syn'); talk(); quiz(); talk(); log('synvyr', v().S.f.synvyr);
+at(22, 20, 'up'); talk([0]); wait(); talk(); log('synvyr', v().S.f.synvyr, 'sloza', !!v().S.items.sloza, 'syn on the island:', v().WORLD.synevyr.ents.some(e => e.id === 'syn2' && e.when()));
 // over the pass
 go('synevyr', 42, 14); v().player.dir = 'right'; hold('ArrowRight'); log('over the pass:', v().area, v().player.tx, v().player.ty);
 // the wedding

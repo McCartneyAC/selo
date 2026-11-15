@@ -7,7 +7,7 @@ words = rd('data', 'words.json')
 clips = rd('data', 'clips.json')
 music = rd('data', 'music.json')
 levels = rd('data', 'levels.json') if os.path.exists(os.path.join(root, 'data', 'levels.json')) else 'null'
-js = '\n'.join(rd('src', f) for f in ['art.js', 'art2.js', 'art3.js', 'art4.js', 'art5.js', 'art6.js', 'art7.js', 'world.js', 'learn.js', 'lessons.js', 'quest.js', 'story.js', 'far.js', 'rapids.js', 'north.js', 'mountains.js', 'podillia.js', 'sea.js', 'lviv.js', 'errands.js', 'church.js', 'finale.js', 'folk.js', 'boot.js'])
+js = '\n'.join(rd('src', f) for f in ['art.js', 'art2.js', 'art3.js', 'art4.js', 'art5.js', 'art6.js', 'art7.js', 'world.js', 'learn.js', 'lessons.js', 'quest.js', 'story.js', 'far.js', 'rapids.js', 'north.js', 'mountains.js', 'podillia.js', 'sea.js', 'lviv.js', 'errands.js', 'church.js', 'finale.js', 'folk.js', 'tales.js', 'boot.js'])
 for key, val in [('/*MAPS*/null', maps), ('/*WORDS*/null', words), ('/*CLIPS*/null', clips), ('/*MUSIC*/null', music), ('/*LEVELS*/null', levels)]:
     assert js.count(key) == 1, key
     js = js.replace(key, val)

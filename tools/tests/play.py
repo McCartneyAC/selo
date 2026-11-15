@@ -38,7 +38,7 @@ function quiz(wrong) {
     const Q = v().Q;
     if (!Q) break;
     if (Q.phase === 'q') {
-      if (Q.type === 'spell') { const t = Q.spell.target; for (const ch of t) key(ch); continue; }
+      if (Q.type === 'spell') { const t = Q.spell.target; for (const ch of t) key(ch === '’' ? "'" : ch); continue; }
       const right = Q.opts.indexOf(Q.i), pick = wrong > 0 ? (right + 1) % Q.opts.length : right;
       if (wrong > 0) wrong--;
       key(String(pick + 1));
@@ -62,6 +62,9 @@ function meet(id) {
 function go(id, x, y) { v().enterArea(id, x, y, 'down'); tick(2); }
 function start(f) { const S = v().S; S.name = 'Андрій'; S.sex = S.sex || 'm'; S.f.intro = 1; S.f.book = 1; Object.assign(S.f, f || {}); v().beginGame(); tick(2); }
 function badges(n) { for (let z = 0; z < n; z++) v().S.f['b' + z] = 1; }
+// a real check: prints ok/FAIL, and any FAIL makes play.py exit non-zero
+const fails = [];
+function ok(cond, what) { if (!cond) fails.push(what); console.log((cond ? 'LOG ok   ' : 'LOG FAIL ') + what); return !!cond; }
 function done() { for (const l of said) console.log('SAY ' + l); console.log('DONE'); }
 window.addEventListener('load', () => setTimeout(() => { try { /*SCENARIO*/ } catch (e) { console.log('ERROR ' + e.message + ' ' + (e.stack || '').split('\\n').slice(1, 3).join(' | ')); done(); } }, 1200));
 </script>""".replace('/*SCENARIO*/', scenario)
@@ -79,3 +82,18 @@ for l in r.stderr.splitlines():
         m = l.split('"', 1)[-1].rsplit('", source', 1)[0]
         out.append(m.encode().decode('unicode_escape').encode('latin-1', 'replace').decode('utf-8', 'replace') if '\\u' in m else m)
 print('\n'.join(out))
+bad = [l for l in out if l.startswith('ERROR') or l.startswith('LOG FAIL')]
+# the scenario's LOG lines must match what was recorded when it last played right (tools/tests/expected/<name>.log);
+# PLAY_RECORD=1 records them. Lines logged with log('~ …') vary from run to run and are not compared.
+exp = os.path.join(root, 'tools', 'tests', 'expected', os.path.basename(sys.argv[1]).replace('.js', '.log'))
+got = [l for l in out if l.startswith('LOG ') and not l.startswith('LOG ~')]
+if os.environ.get('PLAY_RECORD'):
+    os.makedirs(os.path.dirname(exp), exist_ok=True); open(exp, 'w', encoding='utf-8').write('\n'.join(got) + '\n')
+elif os.path.exists(exp):
+    want = open(exp, encoding='utf-8').read().splitlines()
+    for k, (a, b) in enumerate(zip(want + [''] * len(got), got + [''] * len(want))):
+        if a != b: bad.append('LOG CHANGED line %d: expected %r, got %r' % (k + 1, a, b)); break
+    if bad and bad[-1].startswith('LOG CHANGED'): print(bad[-1])
+if bad or 'DONE' not in out:
+    print('PLAY FAILED: %d errors/failures%s' % (len(bad), '' if 'DONE' in out else ', and the scenario never reached done()'))
+    sys.exit(1)

@@ -1,5 +1,5 @@
 # Builds the game's word tables from the PULS corpus (local/puls_corpus/puls_corpus.csv): every level is PULS's own level,
-# each sorted into the 25 places by theme and balanced so every place holds about a 25th of the level.
+# each sorted into the 25 places by theme; a place may hold from half to 1.6 times its share, so themes stay together.
 # usage: python3 tools/levels.py
 #
 # data/words.json  = the A1 words, the base table the build inlines: [entry, ...]
@@ -40,13 +40,24 @@ def disp(s): return s.replace("'", '’')   # the game writes the apostrophe as 
 
 def short_en(en):
     s = re.sub(r'\([^)]*\)', '', en); s = re.sub(r':.*$', '', s)
-    s = re.sub(r'\s+', ' ', s).strip(' ;,'); s = re.sub(r'\s*;\s*', '; ', s)
+    s = re.sub(r'\s+', ' ', s); s = re.sub(r'\s+([,;])', r'\1', s); s = re.sub(r'([,;])(?:\s*[,;])+', r'\1', s).strip(' ;,')
+    s = re.sub(r'\s*;\s*', '; ', s)
+    # one sense once: "warmer; warmer" → "warmer", "cube; cube; block" → "cube; block"
+    seen, keep = set(), []
+    for grp in s.split('; '):
+        parts = [p for p in grp.split(', ') if p.lower() not in seen and not seen.add(p.lower())]
+        if parts: keep.append(', '.join(parts))
+    s = '; '.join(keep)
     if len(s) > 40: s = s[:38].rsplit(' ', 1)[0].rstrip(',;') + '…'
     return s or en[:40]
+
+# a few words that belong to one place whatever their theme says: the old forest keeps the forest
+PIN = {'ліс': 8, 'дерево': 8, 'гриб': 8, 'ягода': 8, 'стежка': 8, 'дуб': 8, 'сосна': 8, 'лісовий': 8, 'папороть': 8, 'вовк': 8, 'ведмідь': 8, 'сова': 8}
 
 def prefs(r, home_zone):
     score = [0.0] * NZ
     if home_zone is not None: score[home_zone] += 3
+    if norm(r['uk'].split(',')[0]) in PIN: score[PIN[norm(r['uk'].split(',')[0])]] += 10
     if r['domain'] in DOMAIN: score[DOMAIN[r['domain']]] += 2
     for t in filter(None, r['themes'].split(';')):
         if t in THEME: score[THEME[t]] += 1.5
@@ -61,42 +72,68 @@ def prefs(r, home_zone):
 
 def hash_(k): return (k * 2654435761) % 4294967296
 
-def balance(items, size):
-    """items: [(key, score[25])]; place each in its best zone, moving the most movable words out of full zones."""
-    cap = [size // NZ + (1 if z < size % NZ else 0) for z in range(NZ)]
+def balance(items, size, lo=0.5, hi=1.6):
+    """items: [(key, score[25])]. Each word goes to the place that suits it best; a place may hold between lo and hi times
+    the mean. Only what spills over the ceiling moves out, and an underfull place pulls in the words that lose least by moving."""
+    mean = size / NZ
+    floor, ceil = math.ceil(lo * mean), math.floor(hi * mean)
     order = {k: sorted(range(NZ), key=lambda z: -s[z]) for k, s in items}
     S = dict(items)
     zone, members = {}, [[] for _ in range(NZ)]
     for k, _ in items:
         z = order[k][0]; zone[k] = z; members[z].append(k)
-    for _ in range(60):
+    def move(k, a, b): members[a].remove(k); members[b].append(k); zone[k] = b
+    for _ in range(100):
         moved = False
-        for z in range(NZ):
-            over = len(members[z]) - cap[z]
+        for z in range(NZ):                      # too many: the least attached go to their next best place with room
+            over = len(members[z]) - ceil
             if over <= 0: continue
-            # evict those that lose least by moving to a zone with room
-            def loss(k):
-                alt = [a for a in order[k] if a != z and len(members[a]) < cap[a]]
-                return (S[k][z] - S[k][alt[0]]) if alt else 99
-            for k in sorted(members[z], key=lambda k: (loss(k), hash_(k)))[:over]:
-                alt = [a for a in order[k] if a != z and len(members[a]) < cap[a]]
-                if not alt: continue
-                members[z].remove(k); members[alt[0]].append(k); zone[k] = alt[0]; moved = True
+            def alt(k): return next((a for a in order[k] if a != z and len(members[a]) < ceil), None)
+            for k in sorted(members[z], key=lambda k: (S[k][z] - S[k][alt(k)] if alt(k) is not None else 99, hash_(k)))[:over]:
+                a = alt(k)
+                if a is not None: move(k, z, a); moved = True
+        for z in range(NZ):                      # too few: take the words that mind least, from places that can spare them
+            short = floor - len(members[z])
+            if short <= 0: continue
+            cand = [k for y in range(NZ) if y != z and len(members[y]) > floor for k in members[y]]
+            for k in sorted(cand, key=lambda k: (S[k][zone[k]] - S[k][z], hash_(k))):
+                if short <= 0: break
+                if len(members[zone[k]]) > floor: move(k, zone[k], z); short -= 1; moved = True
         if not moved: break
-    assert all(len(members[z]) == cap[z] for z in range(NZ)), [len(m) - c for m, c in zip(members, cap)]
+    assert all(floor <= len(m) <= ceil for m in members), [len(m) for m in members]
     return zone
+
+def stress_fixes():
+    """tools/puls/stress_fix.txt: headword -> (shown or None to keep the corpus form, spoken or None for as shown)"""
+    out = {}
+    for line in open(os.path.join(root, 'tools', 'puls', 'stress_fix.txt'), encoding='utf-8'):
+        if not line.strip() or line.startswith('#'): continue
+        uk, shown, spoken = [x.strip() for x in (line.rstrip('\n') + '|').split('|')[:3]]
+        mark = lambda t: re.sub(r'([аеєиіїоуюяАЕЄИІЇОУЮЯ])\+', '\\1' + ACUTE, t) if t and t not in ('=', '?') else None
+        shown, spoken = mark(shown), mark(spoken)
+        for t in (shown, spoken):
+            assert t is None or norm(t) == norm(uk), ('stress_fix.txt: the marked form does not spell the headword', uk, t)
+        out[uk] = (shown, spoken)
+    return out
 
 def main():
     rows = list(csv.DictReader(open(os.path.join(root, '..', 'local', 'puls_corpus', 'puls_corpus.csv'), encoding='utf-8')))
+    global FIX
+    FIX = stress_fixes()
+    unknown = set(FIX) - {r['uk'] for r in rows}
+    assert not unknown, ('stress_fix.txt names words the corpus does not have', sorted(unknown))
     out, tts = {}, {}
     for L in LEVELS:
         new, items, said = [], [], []
         for r in (r for r in rows if r['game_level'] == L):
             uk = disp(r['uk']); st = disp(r['uk_stressed'] or r['uk'])
+            shown, spoken = FIX.get(r['uk'], (None, None))
+            if shown: st = disp(shown)
+            said_text = spoken or shown or r['uk_stressed'] or r['uk']
             first = norm(uk.split(',')[0])
             spell = first.replace("'", '’') if re.fullmatch(r"[а-яіїєґ']{2,10}", first) else ''
             new.append([uk, st, r['en'], short_en(r['en']), spell, 0, []])
-            said.append(r['uk_stressed'] or r['uk'])     # exactly the text tools/puls/tts.py speaks
+            said.append(said_text)                       # exactly the text tools/puls/tts.py speaks
             items.append((-len(new), prefs(r, None)))
         zone = balance(items, len(items))
         for k, w in enumerate(new): w[5] = zone[-(k + 1)]
@@ -105,6 +142,7 @@ def main():
         tts[L] = said
         sizes = [sum(1 for w in new if w[5] == z) for z in range(NZ)]
         print(L, len(new), 'words; per place', min(sizes), '-', max(sizes), '; trial needs', math.ceil(.75 * min(sizes)), '-', math.ceil(.75 * max(sizes)))
+        print('   ', ' '.join(f'{z}:{n}' for z, n in enumerate(sizes)))
     json.dump(tts, open(os.path.join(root, 'data', 'levels_tts.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(out, open(os.path.join(root, 'data', 'levels.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 
